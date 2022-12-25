@@ -5,7 +5,6 @@ const parser = new xml2js.Parser();
 
 const router = express.Router();
 const https = require('https');
-const { type } = require('os');
 
 const HOST = "eutils.ncbi.nlm.nih.gov";
 const BASE_PATH = "/entrez/eutils";
@@ -19,7 +18,8 @@ const errorHandler = (error, req, res, next) => {
         data: [],
         success: false 
     })
-    res.send();
+    res.status(error.status)
+    return res.send();
 }
 
 // Function to obtain article UIDs, based on database and query term
@@ -154,7 +154,7 @@ router.get("/search",
                     success: true,
                     message: "",
                     code: res.statusCode
-                }).send();
+                }); 
             })
             articleInfo.catch( error => {
                 res.status(400);
@@ -183,6 +183,10 @@ router.get("/search",
 //         }
 // })
 
+router.get("/", (req,res) => {
+    
+    res.send({some:"json"})
+})
 
 
 router.use(errorHandler);
