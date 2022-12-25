@@ -22,13 +22,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
 app.use('/papers',papersRouter);
 
-app.use(xmlparser({
-  normalizeTags: false
-}));
-console.log(process.env.NODE_ENV);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
