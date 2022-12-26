@@ -1,0 +1,23 @@
+.App {
+  text-align: center;
+}
+
+@font-face {
+  font-family: forrest-light;
+  src: local('Forrest');
+}
+
+.container {
+  font-family: forrest-light;
+  width: 100%;
+  min-height: 100vh;
+  padding: 5%;
+  background-image: 
+  linear-gradient(to bottom,
+    rgba(23, 96, 169, 0.7),
+    rgba(23, 96, 169, 0.9)),
+    url(./images/background.jpeg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
