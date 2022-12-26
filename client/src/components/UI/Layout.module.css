@@ -1,0 +1,33 @@
+@font-face {
+    font-family: forrest-light;
+    src: local('Forrest');
+}
+
+.header {
+    overflow: hidden;
+    background-color: #bf18ed;
+    padding: 10px 10px;
+    font-family: 'Forrest';
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    float: right;
+}
+
+
+
+
+@media screen and (max-width: 500px) {
+    .header a {
+        float: none;
+        display: block;
+        text-align: left;
+    }
+    .header-right {
+        float: none;
+    }
+}

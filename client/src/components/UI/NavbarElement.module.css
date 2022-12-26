@@ -1,0 +1,20 @@
+.nve {
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.nve a {
+    color: black;
+    font-size: 18px;
+    line-height: 25px;
+}
+
+.nve:hover {
+    background-color: whitesmoke;
+    color: #000000;
+}
+
+.active {
+    background-color: whitesmoke;
+}
