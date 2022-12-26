@@ -18,16 +18,20 @@ const CustomLink= ({to, children, ...props}) => {
     )
 }
 
-const Navbar = () => {
-    
+const Navbar = (props) => {
+    // Iterate over page Obkect
+    const pages = Object.keys(props.pages).map( 
+        (pageRoute) => {
+            return <CustomLink key={pageRoute} to={pageRoute}>{props.pages[pageRoute]}</CustomLink>
+    });
+
     return (
         <nav className={classes.nav}>
             <Link to="/" className={classes["site-title"]}>
                 MedSearchViz
             </Link>
             <ul>
-                <CustomLink to="search">Search</CustomLink>
-                <CustomLink to="about">About</CustomLink>
+                {pages}
             </ul>
         </nav>
     );
