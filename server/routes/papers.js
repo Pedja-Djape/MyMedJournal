@@ -65,7 +65,7 @@ const getArticleInfo = (uidList,retmode,rettype,db) => {
     } );
 }
 
-const genArticleObject = (db,info) => {
+const genArticleObject = (db,article) => {
     // assuming db is pubmed for now
     if (db === "pubmed") {
         let title = article.MedlineCitation[0].Article[0].ArticleTitle[0];
@@ -73,11 +73,13 @@ const genArticleObject = (db,info) => {
         const uid = article.MedlineCitation[0].PMID[0]._;
 
         // get title
-        if (typeof(title) !== 'string' && title === "object") {
+        if (typeof(title) !== 'string' && typeof(title) === "object") {
             title = title._;
         }
-        
-        // get abstract text
+        // get abstract text    
+        if (!("Abstract" in article.MedlineCitation[0].Article[0])) {
+            return null;
+        } 
         if (article.MedlineCitation[0].Article[0].Abstract[0].AbstractText.length === 1){
             abstract = article.MedlineCitation[0].Article[0].Abstract[0].AbstractText[0]
             if (typeof(abstract) !== "string" && typeof(abstract) === "object") {
@@ -91,20 +93,20 @@ const genArticleObject = (db,info) => {
             }
         }
         return {
-           [uid]: {
-                'title': title,
-                'abstract': abstract
-            }
-        };
+            'id': uid,
+            'title': title,
+            'abstract': abstract
+            }; 
     };
 }
 
 router.get("/search", 
     (req,res,next) => {
         // get query params
+        
         const db = req.query.db; 
         let term = req.query.term; 
-
+        
         // *** VALIDATE DB ***
         if (!db || db.trim() === "") {
             const err = new Error("Please provide a valid database to search a query for.");
@@ -118,10 +120,9 @@ router.get("/search",
             err.status = 400;
             return next(err); 
         }
-
         // replace spaces in search query with '+' sign
-        term = term.replace(" ","+");
-
+        term = term.replaceAll(" ","+");
+        console.log(term);
         // get returned article IDs
         const UIDs =  getArticleUIDs(db,term);
         
@@ -133,10 +134,8 @@ router.get("/search",
             
             // Array of article IDs
             const aUIDs = data.eSearchResult.IdList[0]['Id'] 
-
             // get metadata about article
             const articleInfo = getArticleInfo(aUIDs.toString(),"","",db);
-
             articleInfo.then( info => {
                 // convert to json
                 let ainfo = null;
@@ -145,7 +144,10 @@ router.get("/search",
                 // iterate over pubmed articles
                 for (article of ainfo.PubmedArticleSet.PubmedArticle) {
                     const articleObject = genArticleObject(db,article);
-                    rval.push(articleObject);
+                    if (articleObject !== null) {
+                        rval.push(articleObject);
+                    }
+                    
                 }
                 
                 res.status(200);
