@@ -1,0 +1,36 @@
+.container {
+    font-family: inherit;
+    width: 100%;
+    /* border: 5px solid green; */
+    min-height: 100vh;
+}
+
+.pageTitle {
+    font-family: inherit;
+    text-align: center;
+    /* border: 2px dashed red; */
+}
+
+.pageTitle h1{
+    font-size: 40px;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.search-bar {
+    /* width: 700px; */
+    width: 50%;
+    align-self: center;
+    flex-shrink: 0;
+    border: 5px solid black;
+    padding: 10px;
+}
+
+.e1 {
+    width: 70%;
+    border: 3px dashed red;
+}
