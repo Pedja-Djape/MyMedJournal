@@ -24,7 +24,7 @@ function App() {
 		<Navbar pages={pages}/>
 		<div className={classes.container}>
 			<Routes> {/*List of Routes*/}
-				<Route path='/' element={<Home />} />
+				<Route path='/' element={<Search />} />
 				<Route path="search" element={<Search />} />
 				<Route path="about" element={<About />} />
 				<Route path="*" element={<NoPage />} />
