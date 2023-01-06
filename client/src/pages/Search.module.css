@@ -8,7 +8,6 @@
 .pageTitle {
     font-family: inherit;
     text-align: center;
-    /* border: 2px dashed red; */
 }
 
 .pageTitle h1{
@@ -19,7 +18,6 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    /* border: 3px dashed black; */
 }
 
 .search-bar {
@@ -27,33 +25,36 @@
     width: 50%;
     align-self: center;
     flex-shrink: 0;
-    /* border: 5px solid black; */
     padding: 10px;
 }
 
 .cards-container {
     display: flex;
+    align-items: stretch;
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 20px;
-    /* border: 5px solid violet; */
+    border: 5px solid violet;
 }
+
 
 .card {
     margin: 10px;
     transition: all 0.4s;
-    width: 400px;
-    border: 5px solid violet;
+    width: 25em;
+    /* background-color: white;
+    border-radius: 0.1rem; */
 }
 
 
 .cards-container:hover .card {
     opacity: 0.5;
     filter: blur(3px);
+    transform: scale(0.9);
 }
 
 .container .card:hover{
     opacity: 1;
-    filter: blur(0px);
-    transform: scale(1.05);
+    filter: blur(0);
+    transform: scale(1.1);
 }

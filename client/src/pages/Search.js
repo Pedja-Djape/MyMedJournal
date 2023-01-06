@@ -28,9 +28,7 @@ const Search = () => {
             }); 
     } 
 
-    
-    
-    
+    const cardColor = 'white'
 
     return (
         <div className={classes.container}>
@@ -50,6 +48,7 @@ const Search = () => {
                             <Card 
                                 title={article.title}
                                 body={article.abstract}
+                                color={cardColor}
                             />
                         </div>
                         ) :
