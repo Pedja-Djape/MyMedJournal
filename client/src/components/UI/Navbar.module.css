@@ -12,6 +12,8 @@ body {
 
 
 .nav {
+    position: fixed;
+    width: 100%;
     font-family: forrest-light;
     background-color: #333;
     color: white;
