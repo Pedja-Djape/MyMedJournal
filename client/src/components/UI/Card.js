@@ -6,7 +6,7 @@ import { useState } from 'react';
 const Card = (props) => {
     
     return <>
-        <div className={classes.card} style={{'background-color': props.color}}>
+        <div className={classes.card} style={{'backgroundColor': props.color}}>
             <div className={classes['card-header']}>
                 {props.title}
             </div>
