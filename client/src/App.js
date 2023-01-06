@@ -4,7 +4,7 @@ import classes from './App.module.css'
 import { Routes, Route } from 'react-router-dom';
 
 import Navbar from "./components/UI/Navbar";
-import Home from "./pages/Home.js";
+// import Home from "./pages/Home.js";
 import Search from "./pages/Search";
 import About from "./pages/About";
 import NoPage from "./pages/NoPage";
