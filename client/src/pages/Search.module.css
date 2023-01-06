@@ -3,6 +3,7 @@
     width: 100%;
     /* border: 5px solid green; */
     min-height: 100vh;
+    margin-top: 50px;
 }
 
 .pageTitle {
@@ -34,7 +35,6 @@
     justify-content: center;
     flex-wrap: wrap;
     margin-top: 20px;
-    border: 5px solid violet;
 }
 
 
@@ -42,8 +42,6 @@
     margin: 10px;
     transition: all 0.4s;
     width: 25em;
-    /* background-color: white;
-    border-radius: 0.1rem; */
 }
 
 
