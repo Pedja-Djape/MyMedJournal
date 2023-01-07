@@ -13,7 +13,13 @@ body {
 
 .nav {
     position: fixed;
-    width: 100%;
+    width: 100%; 
+    top: 0;
+    left: 0;
+
+
+    padding: 0 1rem;
+    z-index: 1000;
     font-family: forrest-light;
     background-color: #333;
     color: white;
@@ -21,7 +27,7 @@ body {
     justify-content: space-between;
     align-items: stretch;
     gap: 2rem;
-    padding: 0 1rem;
+    
 }
 
 .site-title {
