@@ -1,0 +1,78 @@
+* {
+    font-family: forrest-light;
+}
+
+.card {
+    background-color: transparent;
+    display: block;
+    border-radius: 1rem;
+    height: 500px;
+}
+
+.card-header {
+    font-size: 1.7rem;
+    margin-bottom: .25rem;
+    line-height: 2rem;
+    width: 100%;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    
+    padding: 10px 10px 5px;
+    overflow: scroll;
+    border-bottom: 1.5px solid black;
+    background-image: linear-gradient(to bottom right,#5ca1fa,#1C43F5)
+
+}
+
+.abstractTitle {
+    color:  #000000;
+    font-size: 1.5rem;
+    padding-left: 10px;
+}
+
+.card-body {
+    font-size: 1em;
+    height: 50%;
+    text-indent: 2em;
+    overflow: scroll;
+
+
+    display: -webkit-box;
+
+    padding-left: 15px;
+    padding-right: 5px;
+}
+
+
+.card-footer {
+    border-top: 1.5px solid black;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    width: 100%;
+    
+    margin-top: 10px;
+    
+    background-image: linear-gradient(to bottom left,#5ca1fa,#1C43F5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    position: absolute;
+    bottom: 0;
+    height: 15%
+}
+
+.button {
+    background-color: red;
+    border-radius: 25%;
+    height: 40px;
+}
+
+.button:before {
+    transform: rotate(45deg);
+}
+
+.button:after {
+    transform: rotate(-45deg);
+    content: '\00d7';
+}
