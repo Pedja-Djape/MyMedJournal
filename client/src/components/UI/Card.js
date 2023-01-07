@@ -1,12 +1,18 @@
 import classes from "./Card.module.css";
-import tmp from '../../images/search.png'
 
-import { useState } from 'react';
 
 const Card = (props) => {
+
+    
+    
+    const handleCardClick = () => {
+        props.onCardClick(props.title,props.body)
+    }
+
+
     
     return <>
-        <div className={classes.card} style={{'backgroundColor': props.color}}>
+        <div className={classes.card} style={{'backgroundColor': props.color}} onClick={handleCardClick}>
             <div className={classes['card-header']}>
                 {props.title}
             </div>
