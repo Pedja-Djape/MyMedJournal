@@ -177,20 +177,6 @@ router.get("/search",
     
 });
 
-// Alternative method, using async/await
-
-// router.get("/search", 
-//     // define async fxn (returns promise)
-//     async (req,res) => {
-//         try {
-//             // wait until promise is settled
-//             const UIDs = await getArticleUIDs("pubmed","covid");
-//             res.send(UIDs);
-//         }
-//         catch (error) {
-//             res.status(400);
-//         }
-// })
 
 router.get("/", (req,res) => {
     
