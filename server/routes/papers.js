@@ -122,7 +122,6 @@ router.get("/search",
         }
         // replace spaces in search query with '+' sign
         term = term.replaceAll(" ","+");
-        console.log(term);
         // get returned article IDs
         const UIDs =  getArticleUIDs(db,term);
         
