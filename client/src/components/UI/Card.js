@@ -6,7 +6,7 @@ const Card = (props) => {
     
     
     const handleCardClick = () => {
-        props.onCardClick(props.title,props.body)
+        props.onCardClick(props.title,props.body,props.id);
     }
 
 
