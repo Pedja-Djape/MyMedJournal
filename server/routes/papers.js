@@ -131,6 +131,14 @@ router.get("/search",
             let data = null;
             parser.parseString(response, (e,d) => data = d);
             
+            if (data.eSearchResult.Count == '0') {
+                const ERROR = {
+                    message: "Invalid Query. 0 Articles found matching entered query.",
+                    status: 400
+                };
+                next(ERROR);
+                return;
+            }
             // Array of article IDs
             const aUIDs = data.eSearchResult.IdList[0]['Id'] 
             // get metadata about article
