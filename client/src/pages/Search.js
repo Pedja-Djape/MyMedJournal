@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import SearchBar from "../components/SearchTools/SearchBar";
 import classes from './Search.module.css';
 import Card from "../components/UI/Card";
@@ -30,6 +30,10 @@ const Search = () => {
                 if (data.code === 200){
                     setArticlesData(data.data);
                 }
+                else if (data.code >= 400 && data.code < 500) {
+                    alert(`Invalid query: '${enteredValue}'. Please try again.`);
+                }
+
             }); 
     } 
 
