@@ -24,6 +24,16 @@
 
 }
 
+.card-header a {
+    text-decoration: none;
+    color: black
+}
+
+a[target="_blank"]::after {
+    content: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAQElEQVR42qXKwQkAIAxDUUdxtO6/RBQkQZvSi8I/pL4BoGw/XPkh4XigPmsUgh0626AjRsgxHTkUThsG2T/sIlzdTsp52kSS1wAAAABJRU5ErkJggg==);
+    margin: 0px 3px 0px 5px;
+  }
+
 .abstractTitle {
     color:  #000000;
     font-size: 1.5rem;

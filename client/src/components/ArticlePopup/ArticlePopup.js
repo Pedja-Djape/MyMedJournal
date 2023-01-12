@@ -7,7 +7,7 @@ const ArticlePopup = (props) => {
     return (<>
         <div className={classes.card} style={{'backgroundColor': props.color}}>
             <div className={classes['card-header']}>
-                {props.title}
+                <a href={`https://pubmed.ncbi.nlm.nih.gov/${props.id}/`} target="_blank">{props.title}</a>
             </div>
             <div className={classes.abstractTitle}>Abstract</div>
             <div className={classes['card-body']}>
