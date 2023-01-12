@@ -71,7 +71,14 @@ const genArticleObject = (db,article) => {
         let title = article.MedlineCitation[0].Article[0].ArticleTitle[0];
         let abstract = '';
         const uid = article.MedlineCitation[0].PMID[0]._;
-
+        
+        console.log(article.PubmedData[0].ArticleIdList[0].ArticleId);
+        let isFreeFT = false;
+        for (id of article.PubmedData[0].ArticleIdList[0].ArticleId) {
+            if (id['$'].IdType === 'pmc') {
+                isFreeFT = true;
+            }
+        }
         // get title
         if (typeof(title) !== 'string' && typeof(title) === "object") {
             title = title._;
@@ -95,7 +102,8 @@ const genArticleObject = (db,article) => {
         return {
             'id': uid,
             'title': title,
-            'abstract': abstract
+            'abstract': abstract,
+            'isFreeFT': isFreeFT
             }; 
     };
 }
@@ -181,7 +189,7 @@ router.get("/search",
 router.get("/", (req,res) => {
     
     res.send({some:"json"})
-})
+});
 
 
 router.use(errorHandler);
