@@ -9,8 +9,8 @@ const CustomLink= ({to, children, ...props}) => {
         end: true
     });
     return (
-        <li className={`hover:bg-[#777] ${isActive ? "b#555]" : ""}`}  >
-            <Link className="text-inherit no-underline h-full flex items-center p-1" to={to} {...props}>
+        <li className={`hover:scale-125 duration-300 h-full ${isActive ? "b#555]" : ""}`}  >
+            <Link className="text-inherit no-underline  flex items-center p-1" to={to} {...props}>
                 {children}
             </Link>
         </li>
@@ -27,7 +27,7 @@ const Navbar = (props) => {
     return (
         <div className="box-border">
             <nav className="fixed w-full top-0 left-0 py-4 z-50 bg-[#333] text-white flex justify-between items-stretch ">
-                <Link to="/" className="text-2xl">
+                <Link to="/" className="text-2xl pl-2">
                     MedSearchViz
                 </Link>
                 <ul className="p-0 m-0 list-none flex gap-4">
