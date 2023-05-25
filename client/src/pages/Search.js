@@ -48,17 +48,7 @@ const Search = () => {
 
     const cardColor = 'white'
 
-    const buttonWrapperStyles = {
-        position: 'relative',
-        zIndex: 1
-    }
-
-    const otherContentStyles = {
-        position: 'relative',
-        zIndex: 2,
-        backgroundColor: 'red',
-        padding: '10px'
-    }
+   
 
     return (
         // <div className={classes.container} onClick={() => isModalOpen ? setIsModalOpen(false) : null}>
