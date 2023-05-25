@@ -8,6 +8,7 @@ import Navbar from "./components/UI/Navbar";
 import Search from "./pages/Search";
 import About from "./pages/About";
 import NoPage from "./pages/NoPage";
+import Login from "./pages/Login"
 
 
 
@@ -16,7 +17,8 @@ function App() {
 	const pages = {
 		"/": 'Home',
 		'about': 'About',
-		"search": 'Search'
+		"search": 'Search',
+		"login": 'Login'
 	}
 
 
@@ -28,6 +30,7 @@ function App() {
 				<Route path='/' element={<Search />} />
 				<Route path="search" element={<Search />} />
 				<Route path="about" element={<About />} />
+				<Route path='login' element={<Login />} />
 				<Route path="*" element={<NoPage />} />
 			</Routes>
 		</div>
