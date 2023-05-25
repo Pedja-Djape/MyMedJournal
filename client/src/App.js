@@ -14,8 +14,9 @@ import NoPage from "./pages/NoPage";
 function App() {
 
 	const pages = {
-		"/": 'Search',
-		'about': 'About'
+		"/": 'Home',
+		'about': 'About',
+		"search": 'Search'
 	}
 
 
