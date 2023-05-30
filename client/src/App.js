@@ -1,42 +1,33 @@
-import React, { useState } from 'react';
-import classes from './App.module.css'
+import React from "react";
 
-import { Routes, Route } from 'react-router-dom';
+import { 
+	createBrowserRouter,
+	RouterProvider
+ } from "react-router-dom";
 
-import Navbar from "./components/UI/Navbar";
-// import Home from "./pages/Home.js";
-import Search from "./pages/Search";
-import About from "./pages/About";
-import NoPage from "./pages/NoPage";
-import Login from "./pages/Login"
+ import RootLayout from './pages/RootLayout'
+ import Home from './pages/Home'
+ import Search from './pages/Search';
 
-
+const router = createBrowserRouter([
+	{
+		path: "/",
+		element: <RootLayout />,
+		children: [
+			{
+				index: true,
+				element: <Home />
+			},
+			{
+				path: 'search',
+				element: < Search />
+			}
+		]
+	},
+]);
 
 function App() {
-
-	const pages = {
-		"/": 'Home',
-		'about': 'About',
-		"search": 'Search',
-		"login": 'Login'
-	}
-
-
-	return (
-	<React.Fragment>
-		<Navbar pages={pages}/>
-		<div className={classes.container}>
-			<Routes> {/*List of Routes*/}
-				<Route path='/' element={<Search />} />
-				<Route path="search" element={<Search />} />
-				<Route path="about" element={<About />} />
-				<Route path='login' element={<Login />} />
-				<Route path="*" element={<NoPage />} />
-			</Routes>
-		</div>
-	</React.Fragment>
-
-	);
+	return <RouterProvider router={router}/>
 }
 
 export default App;
