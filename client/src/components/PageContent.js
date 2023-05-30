@@ -5,3 +5,5 @@ const PageContent = ({title, children}) => {
         {children}
     </div>
 }
+
+export default PageContent;
