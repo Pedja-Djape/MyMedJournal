@@ -31,7 +31,7 @@
 .cards-container {
     display: flex;
     align-items: stretch;
-    justify-content: space-between;
+    justify-content: space-evenly;
     flex-wrap: wrap;
     margin-top: 20px;
 }
@@ -40,21 +40,19 @@
 .card {
     margin: 10px;
     transition: all 0.4s;
-    width: 25em;
+    width: 33%;
 }
 
 
 .cards-container:hover .card {
-    opacity: 0.5;
-    filter: blur(1.5px);
-    transform: scale(0.9);
+    transform: scale(0.95);
 }
 
 
 .container .card:hover{
     opacity: 1;
     filter: blur(0);
-    transform: scale(1.1);
+    transform: scale(1.2);
 }
 
 
