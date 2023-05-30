@@ -8,33 +8,23 @@ import ArticlePopup from "../components/ArticlePopup/ArticlePopup";
 
 
 const Search = () => {
-
-    const [searchQuery, setSearchQuery] = useState('');
-    const [articlesData, setArticlesData] = useState([]);
+    const [articlesData, setArticlesData] = useState({});
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [cardInfo, setCardInfo] = useState({});
 
 
-    const searchHandler = (enteredValue) => {
-        // replace all whitespace with space
-        setSearchQuery(enteredValue);
-        
+    const searchHandler = async (enteredValue) => {
         const path = "/papers/search?" + new URLSearchParams({
             db: "pubmed",
             term: enteredValue
         });
-        fetch(path)
-            .then( (res) => res.json())
-            .then( (data) => {
-                if (data.code === 200){
-                    setArticlesData(data.data);
-                }
-                else if (data.code >= 400 && data.code < 500) {
-                    alert(`Invalid query: '${enteredValue}'. Please try again.`);
-                }
-
-            }); 
+        const response = await fetch(path);
+        if (!response.ok) {
+            console.log("ERROR FETCHING DATA");
+        }
+        const data = await response.json();
+        setArticlesData(data.data);
     } 
 
     const cardClickHandler = (title,abstract,id) => {
@@ -51,13 +41,10 @@ const Search = () => {
    
 
     return (
-        // <div className={classes.container} onClick={() => isModalOpen ? setIsModalOpen(false) : null}>
         <div className={classes.container}>
             <div className={classes.pageTitle}>
                 <h1>Search for medical articles!</h1>
             </div>
-
-
             {
                 isModalOpen ?
                     <Modal open={isModalOpen} onModalClose={() => setIsModalOpen(false)}>
