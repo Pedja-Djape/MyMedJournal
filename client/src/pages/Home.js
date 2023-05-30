@@ -1,5 +1,7 @@
+import PageContent from '../components/PageContent'
+
 const Home = () => {
-    return <h1>Home</h1>;
+    return <PageContent title='Welcome to MyMedJournal!'></PageContent>;
 };
   
 export default Home;
