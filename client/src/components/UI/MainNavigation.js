@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, Form } from "react-router-dom";
 
 import React from 'react'
 
@@ -34,6 +34,11 @@ const MainNavigation = () => {
                             >
                                 Search
                             </NavLink>
+                        </li>
+                        <li>
+                            <Form>
+                                <button>Logout</button>
+                            </Form>
                         </li>
                     </ul>
                 </div>
