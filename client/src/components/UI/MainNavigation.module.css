@@ -1,0 +1,19 @@
+.list {
+    display: flex;
+    gap: 1rem;
+}
+
+.list {
+    display: flex;
+    gap: 1rem;
+  }
+  
+.list a {
+    text-decoration: none;
+    color: white;
+}
+
+.list a:hover,
+.list a.active {
+    color: #f2c11d;
+}
