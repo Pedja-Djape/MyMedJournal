@@ -20,7 +20,7 @@ export const action = async ({request}) => {
     };
 
     // tell backend to create request
-    const response = await fetch('http://localhost:8080/' + mode, {
+    const response = await fetch('http://localhost:9000/auth/' + mode, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -40,6 +40,7 @@ export const action = async ({request}) => {
     const token = resData.token;
     // temporarily store in localStorage
     localStorage.setItem('token', token);
+    return redirect('/')
 }
 
 
