@@ -8,7 +8,7 @@ const User = mongoose.model(
         username: String,
         email: String,
         password: String,
-        roles: [
+        roles: [ // Role ids must be present in `roles` collection.
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Role"
