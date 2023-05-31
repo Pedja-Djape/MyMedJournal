@@ -1,8 +1,10 @@
 var createError = require('http-errors');
-var express = require('express');
+const express = require('express');
+const cors = require('cors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+
 
 
 // setup routers
@@ -10,6 +12,16 @@ var indexRouter = require('./routes/index');
 var papersRouter = require('./routes/papers');
 
 var app = express();
+
+var corsOptions = {
+  origin: "http://localhost:3000" // allow from this origin
+}
+
+app.use(cors(corsOptions));
+
+// parse requests of content-type - application/json
+app.use(express.json());
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
