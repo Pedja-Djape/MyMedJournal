@@ -8,7 +8,8 @@ import {
  import RootLayout from './pages/RootLayout'
  import Home from './pages/Home'
  import Search from './pages/Search';
- import AuthenticationPage from './pages/Authentication';
+ import AuthenticationPage, {action as authAction} from './pages/Authentication';
+ 
 
 const router = createBrowserRouter([
 	{
@@ -25,7 +26,8 @@ const router = createBrowserRouter([
 			},
 			{
 				path: 'auth',
-				element: <AuthenticationPage />
+				element: <AuthenticationPage />,
+				action: authAction
 			}
 		]
 	},
