@@ -2,17 +2,18 @@
 
 const { default: mongoose } = require("mongoose");
 
-const User = mongoose.model(
-    "User",
-    new mongoose.Schema({
-        username: String,
-        email: String,
-        password: String,
-        roles: [ // Role ids must be present in `roles` collection.
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Role"
-            }
-        ]
-    })
-)
+const userSchema =  new mongoose.Schema({
+    email: {
+        type: String,
+        required: [true, "Please provide an email!"],
+        unique: [true, "Email exists."]
+    },
+    password: {
+        type: String,
+        required: [true, "Please provide a password!"],
+        unique: false
+    }
+})
+
+
+module.exports = mongoose.model.Users || mongoose.model("Users", userSchema);
