@@ -1,10 +1,14 @@
 import { NavLink, Form } from "react-router-dom";
+import { useSelector } from 'react-redux';
 
 import React from 'react'
 
 import classes from './MainNavigation.module.css';
 
 const MainNavigation = () => {
+
+    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+
 
     return (
         <header className="w-full p-4  text-white">
@@ -36,7 +40,7 @@ const MainNavigation = () => {
                             </NavLink>
                         </li>
                         <li>
-                            <Form>
+                            <Form action="/">
                                 <button>Logout</button>
                             </Form>
                         </li>
