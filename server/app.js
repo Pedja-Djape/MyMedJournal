@@ -17,10 +17,10 @@ var app = express();
 dbConnect();
 
 var corsOptions = {
-  origin: ["https://web.postman.co/","http://localhost:3000"], // allow from this origin
+  origin: ["http://localhost:3000"], // allow from this origin
 }
 
-// app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
 app.use(express.json());
