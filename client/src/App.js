@@ -8,6 +8,7 @@ import {
  import RootLayout from './pages/RootLayout'
  import Home from './pages/Home'
  import Search from './pages/Search';
+ import AuthenticationPage from './pages/Authentication';
 
 const router = createBrowserRouter([
 	{
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
 			{
 				path: 'search',
 				element: < Search />
+			},
+			{
+				path: 'auth',
+				element: <AuthenticationPage />
 			}
 		]
 	},
