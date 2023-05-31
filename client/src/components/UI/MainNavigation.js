@@ -7,7 +7,7 @@ import classes from './MainNavigation.module.css';
 const MainNavigation = () => {
 
     return (
-        <header className="w-full p-4 bg-black text-white">
+        <header className="w-full p-4  text-white">
             <nav className="flex justify-between items-center">
                 <div className="flex text-2xl">
                     <NavLink 
