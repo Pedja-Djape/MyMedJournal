@@ -11,7 +11,7 @@ const router = express.Router();
     Register user endpoint.
 */
 
-router.post("/register", (request, response) => {
+router.post("/signup", (request, response) => {
     // hash the password
     bcrypt.hash(request.body.password, 10).then((hashedPassword) => {
         // create a new user instance and collect the data
