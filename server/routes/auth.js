@@ -16,16 +16,27 @@ router.post("/signup", (request, response) => {
     bcrypt.hash(request.body.password, 10).then((hashedPassword) => {
         // create a new user instance and collect the data
         const user = new User({
-        email: request.body.email,
-        password: hashedPassword,
+            email: request.body.email,
+            password: hashedPassword,
         });
     
         // save the new user
         user.save().then((result) => {
             // return success if the new user is added to the database successfully
+            const token = jwt.sign(
+                {
+                    userId: user._id,
+                    userEmail: user.email,
+                },
+                "RANDOM_TOKEN",
+                { 
+                    expiresIn: "24h"
+                }
+            );
             response.status(201).send({
-            message: "User Created Successfully",
-            result,
+                message: "User Created Successfully",
+                email: result.email,
+                token
             });
         }).catch((error) => {
             // catch error if the new user wasn't added successfully to the database
@@ -83,7 +94,7 @@ router.post("/login", (req, res) => {
             e
         })
     })
-})
+});
 
 module.exports = router;
   
