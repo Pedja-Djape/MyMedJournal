@@ -5,19 +5,22 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+const dbConnect = require('./db/dbConnect');
 
 
 // setup routers
-var indexRouter = require('./routes/index');
-var papersRouter = require('./routes/papers');
+const indexRouter = require('./routes/index');
+const papersRouter = require('./routes/papers');
+const authRouter = require('./routes/auth');
 
 var app = express();
+dbConnect();
 
 var corsOptions = {
-  origin: "http://localhost:3000" // allow from this origin
+  origin: ["https://web.postman.co/","http://localhost:3000"], // allow from this origin
 }
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
 app.use(express.json());
@@ -35,14 +38,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/papers',papersRouter);
+app.use('/auth', authRouter);
 
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
-
 
 
 // error handler
