@@ -1,5 +1,6 @@
-import { NavLink, Form } from "react-router-dom";
-import { useSelector } from 'react-redux';
+import { NavLink, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { authActions } from "../../store/authSlice";
 
 import React from 'react'
 
@@ -7,7 +8,17 @@ import classes from './MainNavigation.module.css';
 
 const MainNavigation = () => {
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+
+    const logoutHandler = () => {
+        dispatch(authActions.manageToken({
+            isAuthenticated: false,
+            token: null
+        }));
+        return navigate('/');
+    }
 
 
     return (
@@ -31,7 +42,7 @@ const MainNavigation = () => {
                                 Home
                             </NavLink>
                         </li>
-                        <li className="text-white">
+                        <li>
                             <NavLink 
                                 to='/search'
                                 className={({ isActive }) => isActive ? classes.active : undefined }
@@ -39,14 +50,24 @@ const MainNavigation = () => {
                                 Search
                             </NavLink>
                         </li>
-                        <li>
-                            <Form action="/">
-                                <button>Logout</button>
-                            </Form>
-                        </li>
+                        {!isAuthenticated && (
+                            <li>
+                                <NavLink to='/auth?mode=login'>
+                                    Login
+                                </NavLink>
+                            </li>
+                        )}
+                        {
+                            isAuthenticated && (
+                                <li>
+                                    <button onClick={logoutHandler}>Logout</button>
+                                </li>
+                            )
+                        }
+                        
                     </ul>
                 </div>
-                
+
             </nav>
         </header>
   )
