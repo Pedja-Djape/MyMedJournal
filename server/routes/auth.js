@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
 const User = require('../models/user.model');
-const auth = require('../routes/auth');
 
 const router = express.Router();
 
@@ -36,7 +35,9 @@ router.post("/signup", (request, response) => {
             response.status(201).send({
                 message: "User Created Successfully",
                 email: result.email,
+                id: user._id,
                 token
+
             });
         }).catch((error) => {
             // catch error if the new user wasn't added successfully to the database
@@ -81,14 +82,15 @@ router.post("/login", (req, res) => {
         return res.status(200).send({
             message: "Login successful",
             email: user.email,
-            token,
-            });
+            id: user._id,
+            token
+        });
     }).catch( error => {
         res.status(400).send({
             message: "Passwords do not match",
             error
-        })
-    })}).catch( err => {
+        })})
+    }).catch( err => {
         res.status(404).send({
             error: "Email not found.",
             e
