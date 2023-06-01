@@ -7,3 +7,7 @@ function validatePassword(password) {
     return password.length > 7;
 }
 
+module.exports = {
+    validateEmail,
+    validatePassword
+}
