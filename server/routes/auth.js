@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
 const User = require('../models/user.model');
+const { validateCredentials } = require('../util/validateCreds');
 
 const router = express.Router();
 
@@ -11,11 +12,22 @@ const router = express.Router();
 */
 
 router.post("/signup", (request, response) => {
+    const enteredEmail = req.body.email;
+    const enteredPassword = req.body.password;
+
+    // validate email and password
+    let errors = validateCredentials(enteredEmail, enteredPassword);
+    // check for errors
+    if (Object.keys(errors).length > 0) {
+        return res.status(422).send({
+            errors
+        });
+    }
     // hash the password
-    bcrypt.hash(request.body.password, 10).then((hashedPassword) => {
+    bcrypt.hash(enteredPassword, 10).then((hashedPassword) => {
         // create a new user instance and collect the data
         const user = new User({
-            email: request.body.email,
+            email: enteredEmail,
             password: hashedPassword,
         });
     
@@ -37,7 +49,6 @@ router.post("/signup", (request, response) => {
                 email: result.email,
                 id: user._id,
                 token
-
             });
         }).catch((error) => {
             // catch error if the new user wasn't added successfully to the database
@@ -58,42 +69,54 @@ router.post("/signup", (request, response) => {
     Login user endpoint.
 */
 router.post("/login", (req, res) => {
-    User.findOne({email: req.body.email}).then( user => {
+    const enteredEmail = req.body.email;
+    const enteredPassword = req.body.password;
 
-    bcrypt.compare(req.body.password, user.password).then( passwordCheck => {
-        // check if pass matches
-        if (!passwordCheck) {
-            return res.status(400).send({
-                message: "Passwords do not match",
-                error
-            });
-        }
-        // create JWT token
-        const token = jwt.sign(
-            {
-                userId: user._id,
-                userEmail: user.email,
-            },
-            "RANDOM_TOKEN",
-            { 
-                expiresIn: "24h"
-            }
-        );
-        return res.status(200).send({
-            message: "Login successful",
-            email: user.email,
-            id: user._id,
-            token
+    // validate email and password
+    let errors = validateCredentials(enteredEmail, enteredPassword);
+    // check for errors
+    if (Object.keys(errors).length > 0) {
+        return res.status(422).send({
+            errors
         });
-    }).catch( error => {
-        res.status(400).send({
-            message: "Passwords do not match",
-            error
-        })})
+    }
+    // search for user.
+    User.findOne({email: enteredEmail}).then( user => {
+        // compare passwords
+        bcrypt.compare(enteredPassword, user.password).then( passwordCheck => {
+            if (!passwordCheck) {
+                errors.password = "Passwords do not match."
+                return res.status(401).send({
+                    errors
+                });
+            }
+            // create JWT token
+            const token = jwt.sign(
+                {
+                    userId: user._id,
+                    userEmail: user.email,
+                },
+                "RANDOM_TOKEN",
+                { 
+                    expiresIn: "24h"
+                }
+            );
+            return res.status(200).send({
+                message: "Login successful",
+                email: user.email,
+                id: user._id,
+                token
+            });
+        }).catch( error => {
+            errors.password = "Passwords do not match"
+            res.status(401).send({
+                errors
+            })})
+
     }).catch( err => {
-        res.status(404).send({
-            error: "Email not found.",
-            e
+        errors.email = "Email does not exist."
+        res.status(401).send({
+            errors
         })
     })
 });
