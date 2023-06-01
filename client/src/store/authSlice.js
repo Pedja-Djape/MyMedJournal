@@ -13,7 +13,7 @@ const authSlice = createSlice({
             state.isAuthenticated = action.payload.isAuthenticated;
             state.token = action.payload.token;
             state.email = action.payload.email;
-            state.id = action.payload.email;
+            state.id = action.payload.id;
         }
     }
 })
