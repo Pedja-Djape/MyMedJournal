@@ -42,7 +42,7 @@ const AuthForm = () => {
                 id: userId
             }
             dispatch(authActions.manageToken(payload));
-            navigate("/");
+            navigate("/dashboard");
             return;
         }
     }
