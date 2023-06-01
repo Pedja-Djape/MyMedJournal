@@ -1,4 +1,4 @@
-import { json, redirect } from 'react-router-dom'
+import { json } from 'react-router-dom'
 
 import AuthForm from "../components/AuthForm";
 
