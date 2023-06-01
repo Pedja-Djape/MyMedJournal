@@ -27,7 +27,8 @@ const AuthForm = () => {
     const data = useActionData();
     const dispatch = useDispatch();
 
-    const token =  data?.token
+    const token =  data?.token;
+    const userId = data?.id;
     
     useEffect( () => {
         if (isFirst) {
@@ -37,14 +38,15 @@ const AuthForm = () => {
         if ( token !== undefined) {
             const payload = {
                 isAuthenticated: token === null ? false : true,
-                token
+                token,
+                id: userId
             }
             dispatch(authActions.manageToken(payload));
             navigate("/");
             return;
         }
     }
-    , [token, navigate, dispatch]);
+    , [token, navigate, dispatch, userId]);
 
     const {
         value: enteredEmail,
@@ -106,7 +108,7 @@ const AuthForm = () => {
                 style={passwordHasError ? invalidStyling : null}
                 required  
             />
-            {passwordHasError && <p className='error-text'>Enteted password must be at least 8 characters long!</p>}
+            {passwordHasError && <p className='error-text'>Entered password must be at least 8 characters long!</p>}
             <div className={classes.actions}>
                 <Link to={`?mode=${isLogin ? 'signup' : 'login'}`}>
                     {isLogin ? 'Create an account.' : 'Login.'}
