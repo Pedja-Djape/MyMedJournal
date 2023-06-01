@@ -3,6 +3,8 @@ import { json, redirect } from 'react-router-dom'
 import AuthForm from "../components/AuthForm";
 
 const AuthenticationPage = () => {
+
+
     return <AuthForm />
 }
 
@@ -38,9 +40,8 @@ export const action = async ({request}) => {
 
     const resData = await response.json();
     const token = resData.token;
-    // temporarily store in localStorage
-    localStorage.setItem('token', token);
-    return redirect('/')
+
+    return {token}
 }
 
 
