@@ -30,7 +30,7 @@ export const action = async ({request}) => {
         body: JSON.stringify(authData)
     });
 
-    if (response.status === 422 || response.status === 401) {
+    if (response.status === 422 || response.status === 401 ) {
         return response;
     }
 
@@ -41,7 +41,10 @@ export const action = async ({request}) => {
     const resData = await response.json();
     const token = resData.token;
 
-    return {token}
+    return {
+        token,
+        id: resData.id
+    }
 }
 
 
