@@ -1,0 +1,43 @@
+
+
+.card {
+    background-color: transparent;
+    display: block;
+    padding: 1rem;
+    border-radius: .5rem;
+    width: 200px;
+    height: 200px;
+    background-color: antiquewhite;
+    border: 1px solid #f2c11d;
+}
+
+.card-header {
+    font-size: 1rem;
+    margin-bottom: .5rem;
+    line-height: 1rem;
+    width: 100%;
+    height: 2.2rem;
+
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+}
+
+.card-body {
+    font-size: 0.7rem;
+    -webkit-line-clamp: 7;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    display: -webkit-box;
+}
+
+
+.card-footer {
+    margin-top: 1rem;
+}
