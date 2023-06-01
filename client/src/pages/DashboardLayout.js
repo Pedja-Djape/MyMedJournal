@@ -6,8 +6,11 @@ import DashboardNavigation from "../components/DashboardNavigation";
 const DashboardLayout = () => {
     return (
     <>
-        <DashboardNavigation />
-        <Outlet />
+        <div className="flex gap-4">
+            <DashboardNavigation />
+            <Outlet />
+        </div>
+        
     </>
     )
 }
