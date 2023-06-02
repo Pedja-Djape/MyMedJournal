@@ -11,7 +11,7 @@ const NotesList = ({notes}) => {
             <div className="flex flex-wrap gap-8 w-full">
                 {
                     notes.map((note) => (
-                        <Link>
+                        <Link to={`/dashboard/notes/${note.id}`}>
                             <NoteCard title={note.title} content={note.content}/>
                         </Link>
                     ))
