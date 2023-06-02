@@ -13,7 +13,7 @@ const NoteItem = ({note}) => {
         <article className={classes.note}>
             <h1>{note.title}</h1>
             <div className={classes.description}> 
-                <p>{note.description}</p>
+                <p>{note.content}</p>
             </div>
             <menu className={classes.actions}>
                 <Link to=''>Edit</Link>
