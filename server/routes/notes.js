@@ -4,17 +4,36 @@ const { default: mongoose } = require('mongoose');
 
 const router = express.Router();
 
+async function getUserNotes(uid) {
+    return await Notes.findOne({_id: uid}).exec()
+}
 
 router.get('/:uid', async (req, res) => {
     // check if user exists and other validation
-    const {uid: userId} = req.params;
-    const userNotes = await Notes.findOne({_id: userId}).exec();
+    const {uid} = req.params;
+    const userNotes = await getUserNotes(uid);
     return res.status(200).send({
         message: "Successfully obtained notes.",
         notes: userNotes.notes
     })
 
 });
+
+router.get('/:uid/:noteId', async (req, res) => {
+    const {uid, noteId} = req.params;
+    const userNotes = await getUserNotes(uid);
+    for (const note of userNotes.notes) {
+        if (note._id.toString() === noteId) {
+            return res.status(200).send({
+                message: "Successfully obtained note.",
+                note
+            })
+        }
+    }
+    return res.status(400).send({
+        message: `Note with id ${noteId} does not exist.`
+    });
+})
 
 // ADD AUTHENTICATIION AND VALIDATION!!!!
 router.post('/add', async (req, res) => {
@@ -49,7 +68,6 @@ router.post('/add', async (req, res) => {
         }
         const numNotes = userNotes.notes.push(newNote)
         const result = await userNotes.save();
-        console.log(result);
         return res.status(200).send(
             {
                 noteId: userNotes.notes[numNotes - 1]._id.toString()
