@@ -34,10 +34,12 @@ h1 {
     text-decoration: none;
     font: inherit;
     cursor: pointer;
+    color: #f6c35d;
+    font-size: 1.25rem;
 }
 
 .actions button {
     background-color: transparent;
     border: none;
-    color: #fab833;
+    color: red;
 }
