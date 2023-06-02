@@ -11,7 +11,7 @@ const router = express.Router();
     Register user endpoint.
 */
 
-router.post("/signup", (request, response) => {
+router.post("/signup", (req, res) => {
     const enteredEmail = req.body.email;
     const enteredPassword = req.body.password;
 
@@ -44,7 +44,7 @@ router.post("/signup", (request, response) => {
                     expiresIn: "24h"
                 }
             );
-            response.status(201).send({
+            res.status(201).send({
                 message: "User Created Successfully",
                 email: result.email,
                 id: user._id,
@@ -52,13 +52,13 @@ router.post("/signup", (request, response) => {
             });
         }).catch((error) => {
             // catch error if the new user wasn't added successfully to the database
-            response.status(500).send({
+            res.status(500).send({
             message: "Error creating user",
             error,
             });
         });
     }).catch((e) => {
-        response.status(500).send({
+        res.status(500).send({
             message: "Password was not hashed successfully",
             e
         });
