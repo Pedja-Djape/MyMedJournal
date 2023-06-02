@@ -12,6 +12,7 @@ const dbConnect = require('./db/dbConnect');
 const indexRouter = require('./routes/index');
 const papersRouter = require('./routes/papers');
 const authRouter = require('./routes/auth');
+const notesRouter = require('./routes/notes');
 
 var app = express();
 dbConnect();
@@ -39,6 +40,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/papers',papersRouter);
 app.use('/auth', authRouter);
+app.use('/notes', notesRouter);
 
 
 // catch 404 and forward to error handler
