@@ -16,10 +16,8 @@ const noteSchema = new mongoose.Schema({
 })
 
 const notesSchema = new mongoose.Schema({
-    userId: {
-        type: String,
-        required: [true, "Please provide an email."],
-        unique: [true, "Email exists"]
+    _id: {  // will be ID of user
+        type: String
     },
     notes: [noteSchema]
 })
