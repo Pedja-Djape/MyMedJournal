@@ -10,7 +10,7 @@ import {
  import Search from './pages/Search';
  import AuthenticationPage, {action as authAction} from './pages/Authentication';
 import DashboardLayout from "./pages/DashboardLayout";
-import NotesPage from "./pages/Notes";
+import NotesPage, {loader as notesLoader} from "./pages/Notes";
 import NotesLayout from "./pages/NotesLayout";
 import NoteDetail from "./pages/NoteDetail";
  
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
 				action: authAction
 			},
 			{
-				path: 'dashboard',
+				path: 'dashboard/:uid',
 				element: <DashboardLayout />,
 				children: [
 					{
@@ -47,7 +47,8 @@ const router = createBrowserRouter([
 						children: [
 							{
 								index: true,
-								element: <NotesPage />
+								element: <NotesPage />,
+								loader: notesLoader
 							},
 							{
 								path: ":noteId",
