@@ -1,0 +1,43 @@
+.note {
+    margin: 2rem auto;
+    text-align: center;
+    width: 55rem;
+    color: white;
+}
+
+h1 {
+    color: white;
+    font-size: 3rem;
+}
+
+.description {
+    width: 90%;
+    border: 1px solid #f6c666;
+    text-align:left;
+    padding: 1rem;
+    margin: 1rem auto;
+    font-size: 1.5rem;
+    height: 30rem;
+    overflow-y: auto;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.actions a,
+.actions button {
+    padding: 0.25rem 1rem;
+    text-decoration: none;
+    font: inherit;
+    cursor: pointer;
+}
+
+.actions button {
+    background-color: transparent;
+    border: none;
+    color: #fab833;
+}
