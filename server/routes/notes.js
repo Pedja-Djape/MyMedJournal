@@ -5,10 +5,9 @@ const { default: mongoose } = require('mongoose');
 const router = express.Router();
 
 
-router.get('/', async (req, res) => {
-    // check if user exists
-    
-    const {userId} = req.body;
+router.get('/:uid', async (req, res) => {
+    // check if user exists and other validation
+    const {uid: userId} = req.params;
     const userNotes = await Notes.findOne({_id: userId}).exec();
     return res.status(200).send({
         message: "Successfully obtained notes.",
