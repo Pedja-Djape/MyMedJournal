@@ -12,7 +12,7 @@ import {
 import DashboardLayout from "./pages/DashboardLayout";
 import NotesPage, {loader as notesLoader} from "./pages/Notes";
 import NotesLayout from "./pages/NotesLayout";
-import NoteDetail from "./pages/NoteDetail";
+import NoteDetail, {loader as noteDetailLoader} from "./pages/NoteDetail";
  
 
 const router = createBrowserRouter([
@@ -39,7 +39,7 @@ const router = createBrowserRouter([
 				children: [
 					{
 						index: true,
-						element: ''
+						element: <div>Hi</div>
 					},
 					{
 						path: 'notes',
@@ -55,7 +55,8 @@ const router = createBrowserRouter([
 								children: [
 									{
 										index: true,
-										element: <NoteDetail />
+										element: <NoteDetail />,
+										loader: noteDetailLoader
 									}
 								]
 							}
