@@ -6,10 +6,10 @@ const router = express.Router();
 
 
 router.get('/', async (req, res) => {
-    const userEmail = req.body.email;
-
-    const userNotes = await Notes.findOne({_id: userEmail}).exec();
-    console.log(userNotes)
+    // check if user exists
+    
+    const {userId} = req.body;
+    const userNotes = await Notes.findOne({_id: userId}).exec();
     return res.status(200).send({
         message: "Successfully obtained notes.",
         notes: userNotes.notes
@@ -22,6 +22,7 @@ router.post('/add', async (req, res) => {
     // auth check with token (use middleware before this function is called)
     // check if fields are empty
     // check if userID exists
+    // add try {} ... catch {} blocks for validation errors.
     
     const {userId, noteTitle, noteContent} = req.body;
     // fetch users notes
@@ -56,7 +57,6 @@ router.post('/add', async (req, res) => {
             }
         )
     }
-
 })
 
 
