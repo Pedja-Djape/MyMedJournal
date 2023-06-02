@@ -13,42 +13,6 @@ const DUMMY_NOTES = [
         title: "Confusion",
         content: "How does this affect that?",
         relatedArticle: null
-    },
-    {
-        id: 0,
-        title: 'Interesting article',
-        content: "I found this article very interesting.",
-        relatedArticle: null
-    },
-    {
-        id: 1,
-        title: "Confusion",
-        content: "How does this affect that?",
-        relatedArticle: null
-    },
-    {
-        id: 0,
-        title: 'Interesting article',
-        content: "I found this article very interesting.",
-        relatedArticle: null
-    },
-    {
-        id: 1,
-        title: "Confusion",
-        content: "How does this affect that?",
-        relatedArticle: null
-    },
-    {
-        id: 0,
-        title: 'Interesting article',
-        content: "I found this article very interesting.",
-        relatedArticle: null
-    },
-    {
-        id: 1,
-        title: "Confusion",
-        content: "How does this affect that?",
-        relatedArticle: null
     }
 ];
 
