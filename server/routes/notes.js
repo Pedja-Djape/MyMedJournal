@@ -44,7 +44,7 @@ router.patch('/edit/:noteId', async (req, res) => {
             'notes.$.title': title, 'notes.$.content': content
         }}
     )
-    console.log(idk)
+            
     return res.status(200).send({message: "word"})
 }) 
 
