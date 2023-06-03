@@ -36,7 +36,7 @@ router.get('/:uid/:noteId', async (req, res) => {
 })
 
 router.patch('/edit/:noteId', async (req, res) => { 
-    const { uid, title, content} = await req.body;
+    const { uid, title, content} = req.body;
     const {noteId} = req.params;
     const idk = await Notes.updateOne(
         { _id: uid, 'notes._id': noteId },
@@ -44,7 +44,7 @@ router.patch('/edit/:noteId', async (req, res) => {
             'notes.$.title': title, 'notes.$.content': content
         }}
     )
-            
+
     return res.status(200).send({message: "word"})
 }) 
 
