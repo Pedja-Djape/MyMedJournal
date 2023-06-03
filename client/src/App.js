@@ -15,6 +15,7 @@ import NotesLayout from "./pages/NotesLayout";
 import NoteDetail, {loader as noteDetailLoader} from "./pages/NoteDetail";
 import {action as manipulateNoteAction } from './components/NoteForm';
 import EditNote from "./pages/EditNote";
+import NewNotePage from './pages/NewNote'
  
 
 const router = createBrowserRouter([
@@ -70,7 +71,8 @@ const router = createBrowserRouter([
 							},
 							{
 								path: 'new',
-								element: <div>Add an element</div>
+								element: <NewNotePage />,
+								action: manipulateNoteAction
 							}
 						]
 					}
