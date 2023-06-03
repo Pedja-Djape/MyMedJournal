@@ -1,10 +1,20 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
+import NoteNavigation from '../components/NoteNavigation'
 
 const NotesLayout = () => {
   return (
     <>
-        <Outlet />
+      <div className='flex flex-col justify-center w-full'>
+        <div className='flex justify-center'>
+          <NoteNavigation />
+        </div>
+        <div className='flex justify-center'>
+          <Outlet />
+        </div>
+        
+      </div>
+        
     </>
   )
 }
