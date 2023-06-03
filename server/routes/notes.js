@@ -35,6 +35,19 @@ router.get('/:uid/:noteId', async (req, res) => {
     });
 })
 
+router.patch('/edit/:noteId', async (req, res) => { 
+    const { uid, title, content} = await req.body;
+    const {noteId} = req.params;
+    const idk = await Notes.updateOne(
+        { _id: uid, 'notes._id': noteId },
+        {$set: {
+            'notes.$.title': title, 'notes.$.content': content
+        }}
+    )
+    console.log(idk)
+    return res.status(200).send({message: "word"})
+}) 
+
 // ADD AUTHENTICATIION AND VALIDATION!!!!
 router.post('/add', async (req, res) => {
     // auth check with token (use middleware before this function is called)
