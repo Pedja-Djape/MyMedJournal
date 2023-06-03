@@ -55,14 +55,15 @@ export const action = async ({request, params}) => {
     const data = await request.formData();
 
     const noteData = {
+        uid,
         title: data.get('title'),
         content: data.get('content')
     }
 
-    let url = `http://localhost:9000/${uid}/notes/`
+    let url = `http://localhost:9000/notes/`
 
     if (method === "PATCH") {
-        url = `http://localhost:9000/${uid}/notes/` + params.noteId;
+        url = `http://localhost:9000/notes/edit/` + params.noteId;
     }
 
     // const token = getAuthToken()
