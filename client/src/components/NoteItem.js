@@ -16,11 +16,11 @@ const NoteItem = ({note}) => {
                 <p>{note.content}</p>
             </div>
             <menu className={classes.actions}>
-                <Link to=''>Edit</Link>
+                <Link to='edit'>Edit</Link>
                 <button onClick={deleteHandler}>Delete</button>
             </menu>
         </article>
     )
 }
 
-export default NoteItem
+export default NoteItem;
