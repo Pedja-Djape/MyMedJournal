@@ -19,6 +19,7 @@ h1 {
     font-size: 1.5rem;
     height: 30rem;
     overflow-y: auto;
+    background-color: #3d3c3c;
 }
 
 .actions {
