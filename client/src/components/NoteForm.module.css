@@ -1,0 +1,65 @@
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 2rem auto;
+    text-align: center;
+}
+.form {
+    width: 50%;
+}
+
+.form label {
+    padding-top: 10px;
+    font-size: 1.5rem;
+    color: white;
+}
+
+.form label,
+.form input,
+.form textarea {
+    display: block;
+    width: 100%;
+}
+
+.form input,
+.form textarea {
+    font: inherit;
+    padding: 0.25rem;
+    background-color: #3d3c3c;
+    border: 1px solid #f6c666;
+    border-radius: 5px;
+    color: white;
+}
+
+.actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.actions button {
+    font: inherit;
+    cursor: pointer;
+    margin-top: 5px;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    background-color: beige;
+    color: #444141;
+    border: none;
+}
+
+.actions button[type='button'] {
+    background-color: transparent;
+}
+
+.actions button:hover {
+    background-color: #f6c666;
+}
+
+.actions button[type='button']:hover {
+    background-color: red;
+}
+
+
+
