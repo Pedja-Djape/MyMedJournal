@@ -67,6 +67,10 @@ const router = createBrowserRouter([
 										action: manipulateNoteAction
 									}
 								]
+							},
+							{
+								path: 'new',
+								element: <div>Add an element</div>
 							}
 						]
 					}
