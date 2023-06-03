@@ -10,7 +10,7 @@
 }
 
 .list a {
-    background-color: aqua;
+    background-color: #f6c666;
     color: black;
     padding: 0.5rem 1.5rem;
     border-radius: 4px;
@@ -20,5 +20,9 @@
 .list a:hover,
 .list a:active,
 .list a.active {
-    background-color: blue;
+    background-color: #f2c11d;
+}
+
+.list a:hover {
+    border: 3px solid black;
 }
