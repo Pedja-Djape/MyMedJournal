@@ -1,9 +1,9 @@
 import React, { Suspense } from 'react'
 import NoteItem from '../components/NoteItem';
-import { Await, defer, json, useLoaderData } from 'react-router-dom';
+import { Await, defer, json, useRouteLoaderData } from 'react-router-dom';
 
 const NoteDetail = () => {
-	const {note} = useLoaderData();
+	const {note} = useRouteLoaderData('note-detail');
 	return (
 		<>
 			<Suspense fallback={<p style={{ textAlign: 'center' }}>Loading...</p>}>
@@ -28,10 +28,11 @@ const loadNote = async (uid, id) => {
 	}
 }
 
-export const loader =  ({request, params}) => {
+export const loader =  async ({request, params}) => {
 	const {uid, noteId} = params;
+	const note = await loadNote(uid, noteId)
 	return defer({
-		note: loadNote(uid, noteId)
+		note: note
 	});
 }
 
