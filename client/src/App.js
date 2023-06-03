@@ -13,6 +13,8 @@ import DashboardLayout from "./pages/DashboardLayout";
 import NotesPage, {loader as notesLoader} from "./pages/Notes";
 import NotesLayout from "./pages/NotesLayout";
 import NoteDetail, {loader as noteDetailLoader} from "./pages/NoteDetail";
+import {action as manipulateNoteAction } from './components/NoteForm';
+import EditNote from "./pages/EditNote";
  
 
 const router = createBrowserRouter([
@@ -52,11 +54,17 @@ const router = createBrowserRouter([
 							},
 							{
 								path: ":noteId",
+								id: 'note-detail',
+								loader: noteDetailLoader,
 								children: [
 									{
 										index: true,
 										element: <NoteDetail />,
-										loader: noteDetailLoader
+									},
+									{
+										path: 'edit',
+										element: <EditNote />,
+										action: manipulateNoteAction
 									}
 								]
 							}
