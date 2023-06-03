@@ -49,13 +49,13 @@ router.patch('/edit/:noteId', async (req, res) => {
 }) 
 
 // ADD AUTHENTICATIION AND VALIDATION!!!!
-router.post('/add', async (req, res) => {
+router.post('/', async (req, res) => {
     // auth check with token (use middleware before this function is called)
     // check if fields are empty
     // check if userID exists
     // add try {} ... catch {} blocks for validation errors.
     
-    const {userId, noteTitle, noteContent} = req.body;
+    const {uid: userId, title: noteTitle, content: noteContent} = req.body;
     // fetch users notes
     const userNotes = await Notes.findOne({_id: userId}).exec();
 
