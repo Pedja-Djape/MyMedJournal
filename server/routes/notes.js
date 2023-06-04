@@ -1,5 +1,6 @@
 const express = require('express');
 const Notes = require('../models/note.model');
+const authenticateToken = require('../middleware/auth');
 const { default: mongoose } = require('mongoose');
 
 const router = express.Router();
@@ -8,9 +9,10 @@ async function getUserNotes(uid) {
     return await Notes.findOne({_id: uid}).exec()
 }
 
-router.get('/:uid', async (req, res) => {
+
+router.get('/', authenticateToken, async (req, res) => {
     // check if user exists and other validation
-    const {uid} = req.params;
+    const uid = req.user.userId;
     const userNotes = await getUserNotes(uid);
     return res.status(200).send({
         message: "Successfully obtained notes.",
@@ -19,8 +21,9 @@ router.get('/:uid', async (req, res) => {
 
 });
 
-router.get('/:uid/:noteId', async (req, res) => {
-    const {uid, noteId} = req.params;
+router.get('/:noteId', authenticateToken , async (req, res) => {
+    const uid = req.user.userId;
+    const { noteId } = req.params;
     const userNotes = await getUserNotes(uid);
     for (const note of userNotes.notes) {
         if (note._id.toString() === noteId) {
@@ -35,8 +38,9 @@ router.get('/:uid/:noteId', async (req, res) => {
     });
 })
 
-router.patch('/edit/:noteId', async (req, res) => { 
-    const { uid, title, content} = req.body;
+router.patch('/:noteId', authenticateToken, async (req, res) => { 
+    const uid  = req.user.userId
+    const { title, content} = req.body;
     const {noteId} = req.params;
     const idk = await Notes.updateOne(
         { _id: uid, 'notes._id': noteId },
@@ -49,13 +53,11 @@ router.patch('/edit/:noteId', async (req, res) => {
 }) 
 
 // ADD AUTHENTICATIION AND VALIDATION!!!!
-router.post('/', async (req, res) => {
-    // auth check with token (use middleware before this function is called)
+router.post('/', authenticateToken, async (req, res) => {
     // check if fields are empty
-    // check if userID exists
     // add try {} ... catch {} blocks for validation errors.
-    
-    const {uid: userId, title: noteTitle, content: noteContent} = req.body;
+    const { userId } = req.user
+    const { title: noteTitle, content: noteContent} = req.body;
     // fetch users notes
     const userNotes = await Notes.findOne({_id: userId}).exec();
 
@@ -90,5 +92,15 @@ router.post('/', async (req, res) => {
 })
 
 
+router.delete('/:noteId', authenticateToken, async (req, res) => {
+    const { userId } = req.user
+    const {noteId} = req.params;
+    const result = await Notes.updateOne(
+        { _id: uid },
+        { $pull: { notes: {_id: noteId } } }
+    )
+});
+
 module.exports = router;
+
 
