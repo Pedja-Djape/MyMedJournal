@@ -1,8 +1,10 @@
 const express = require('express');
 const bcrypt = require('bcrypt'); 
 const jwt = require("jsonwebtoken");
+require('dotenv').config();
 
 const User = require('../models/user.model');
+const Notes = require('../models/note.model');
 const { validateCredentials } = require('../util/validateCreds');
 
 const router = express.Router();
@@ -11,7 +13,7 @@ const router = express.Router();
     Register user endpoint.
 */
 
-router.post("/signup", (req, res) => {
+router.post("/signup", async (req, res) => {
     const enteredEmail = req.body.email;
     const enteredPassword = req.body.password;
 
@@ -23,46 +25,47 @@ router.post("/signup", (req, res) => {
             errors
         });
     }
-    // hash the password
-    bcrypt.hash(enteredPassword, 10).then((hashedPassword) => {
-        // create a new user instance and collect the data
+
+    try {
+        const hashedPassword = await bcrypt.hash(enteredPassword, 10);
         const user = new User({
             email: enteredEmail,
             password: hashedPassword,
         });
+        const result = await user.save();
+        const token = jwt.sign(
+            {
+                userId: user._id.toString(),
+                userEmail: user.email,
+            },
+            process.env.ACCESS_TOKEN_SECRET,
+            { 
+                expiresIn: "24h"
+            }
+        );
+        console.log(user)
+        const newUserNotes = await new Notes({
+            _id: result._id.toString(),
+            notes: []
+        }).save();
+        
+        return res.status(200).send({
+            message: "User Created Successfully",
+            email: result.email,
+            id: result._id.toString(),
+            token
+        })
+    } catch (error) {
+        if (error.code === 11000 && "email" in error.keyPattern) {
+            return res.status(400).send({
+                message: "Error creating user. Username already exists.",
+                email: "Username already exists!"
+            })
+        }
+        console.log(error)
+        return res.status(500).send({error});
+    }
     
-        // save the new user
-        user.save().then((result) => {
-            // return success if the new user is added to the database successfully
-            const token = jwt.sign(
-                {
-                    userId: user._id,
-                    userEmail: user.email,
-                },
-                "RANDOM_TOKEN",
-                { 
-                    expiresIn: "24h"
-                }
-            );
-            res.status(201).send({
-                message: "User Created Successfully",
-                email: result.email,
-                id: user._id,
-                token
-            });
-        }).catch((error) => {
-            // catch error if the new user wasn't added successfully to the database
-            res.status(500).send({
-            message: "Error creating user",
-            error,
-            });
-        });
-    }).catch((e) => {
-        res.status(500).send({
-            message: "Password was not hashed successfully",
-            e
-        });
-    });
 });
 
 /*
@@ -96,7 +99,7 @@ router.post("/login", (req, res) => {
                     userId: user._id,
                     userEmail: user.email,
                 },
-                "RANDOM_TOKEN",
+                process.env.ACCESS_TOKEN_SECRET,
                 { 
                     expiresIn: "24h"
                 }
