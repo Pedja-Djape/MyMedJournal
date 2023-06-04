@@ -1,17 +1,18 @@
 const jwt = require('jsonwebtoken');
 
-const authorizeUser = async (req, res, next) => {
-    try {
-        const token = await req.headers.authorization.split(" ")[1];
-        const decodedToken = jwt.verify(token, "RANDOM_TOKEN");
-        req.user = decodedToken;
+const authenticateToken =  (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) return res.sendStatus(401);
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403);
+        req.user = user;
         next()
-    } catch (error) {
-        res.status(401).json({
-            error: new Error('Invalid request!')
-        });
-    }
+    })
+
+    
 }
 
 
-module.exports = authorizeUser;
+module.exports = authenticateToken;
