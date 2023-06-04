@@ -1,12 +1,17 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, redirect, useNavigate, useSubmit } from 'react-router-dom'
 
 import classes from './NoteItem.module.css';
 
 const NoteItem = ({note}) => {
-
+    const submit = useSubmit();
+    const navigate = useNavigate();
     const deleteHandler = () => {
-        console.log("Delete");
+        const proceed = window.confirm(`Are you sure you want to delete note: ${note.title}`);
+        if (proceed) {
+            submit(null, {method: 'DELETE'}); // submit to action assoc with route
+            return navigate('..');
+        }
     }
 
     return (
