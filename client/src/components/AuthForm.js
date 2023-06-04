@@ -42,7 +42,7 @@ const AuthForm = () => {
                 id: userId
             }
             dispatch(authActions.manageToken(payload));
-            navigate(`/dashboard/${userId}`);
+            navigate(`/dashboard`);
             return;
         }
     }
@@ -53,8 +53,7 @@ const AuthForm = () => {
         hasError: emailHasError,
         isValid: emailIsValid,
         valueChangeHandler: emailChangedHandler,
-        inputBlurHandler: emailBlurHandler,
-        reset: resetEmail
+        inputBlurHandler: emailBlurHandler
     } = useInput( (email) => email.includes('@'));
 
     const {
@@ -62,8 +61,7 @@ const AuthForm = () => {
         hasError: passwordHasError,
         isValid: passwordIsValid,
         valueChangeHandler: passwordChangedHandler,
-        inputBlurHandler: passwordBlurHandler,
-        reset: resetPassword
+        inputBlurHandler: passwordBlurHandler
     } = useInput( (password) => password.length > 7);
 
 
