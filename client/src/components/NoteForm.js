@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
 import { Form, useNavigate, useNavigation, json, redirect } from 'react-router-dom'
-
+import store from '../store'
+ 
 import classes from './NoteForm.module.css'
 
 const NoteForm = ({method, note}) => {
@@ -49,13 +49,11 @@ const NoteForm = ({method, note}) => {
 }
 
 export const action = async ({request, params}) => {
-    const {uid} = params;
 
     const method = request.method;
     const data = await request.formData();
 
     const noteData = {
-        uid,
         title: data.get('title'),
         content: data.get('content')
     }
@@ -67,12 +65,12 @@ export const action = async ({request, params}) => {
     }
     
 
-    // const token = getAuthToken()
+    const token = store.getState().token;
     const response = await fetch(url,{
         method: method,
         headers: {
             'Content-Type': 'application/json',
-            // 'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify(noteData)
     });
@@ -83,7 +81,7 @@ export const action = async ({request, params}) => {
         throw json({message: 'Could not save note'}, {status: 500});
     }
 
-    return redirect(`/dashboard/${uid}/notes`);
+    return redirect(`/dashboard/notes`);
 }
 
 
