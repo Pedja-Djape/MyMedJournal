@@ -22,7 +22,7 @@ const NotesPage = () => {
 }
 
 const loadNotes = async () => {
-    const token = store.getState().token;
+    const token = store.getState().auth.token;
     const response = await fetch('http://localhost:9000/notes/', {
         headers: {
             "Authorization": "Bearer " + token
