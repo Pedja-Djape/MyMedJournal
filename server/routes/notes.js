@@ -96,9 +96,10 @@ router.delete('/:noteId', authenticateToken, async (req, res) => {
     const { userId } = req.user
     const {noteId} = req.params;
     const result = await Notes.updateOne(
-        { _id: uid },
+        { _id: userId },
         { $pull: { notes: {_id: noteId } } }
-    )
+    );
+    return res.status(200).send({message: "Successfully deleted note."});
 });
 
 module.exports = router;
