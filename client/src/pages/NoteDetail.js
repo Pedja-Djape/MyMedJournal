@@ -17,9 +17,9 @@ const NoteDetail = () => {
 	)
 }
 
-const loadNote = async () => {
-	const token = store.getState().token;
-	const response = await fetch('http://localhost:9000/notes/', {
+const loadNote = async (noteId) => {
+	const token = store.getState().auth.token;
+	const response = await fetch(`http://localhost:9000/notes/${noteId}`, {
 		headers: {
 			'Authorization': 'Bearer ' + token
 		}
@@ -35,11 +35,10 @@ const loadNote = async () => {
 	}
 }
 
-export const loader =  async ({request, params}) => {
-	const note = await loadNote()
-	return defer({
-		note: note
-	});
+export const loader =  async ({ params}) => {
+	const {noteId} = params;
+	const note = await loadNote(noteId)
+	return defer({note});
 }
 
 export default NoteDetail;
