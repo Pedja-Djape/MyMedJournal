@@ -71,7 +71,7 @@ router.post("/signup", async (req, res) => {
 /*
     Login user endpoint.
 */
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
     const enteredEmail = req.body.email;
     const enteredPassword = req.body.password;
 
@@ -83,45 +83,36 @@ router.post("/login", (req, res) => {
             errors
         });
     }
-    // search for user.
-    User.findOne({email: enteredEmail}).then( user => {
-        // compare passwords
-        bcrypt.compare(enteredPassword, user.password).then( passwordCheck => {
-            if (!passwordCheck) {
-                errors.password = "Passwords do not match."
-                return res.status(401).send({
-                    errors
-                });
-            }
-            // create JWT token
-            const token = jwt.sign(
-                {
-                    userId: user._id,
-                    userEmail: user.email,
-                },
-                process.env.ACCESS_TOKEN_SECRET,
-                { 
-                    expiresIn: "24h"
-                }
-            );
-            return res.status(200).send({
-                message: "Login successful",
-                email: user.email,
-                id: user._id,
-                token
-            });
-        }).catch( error => {
-            errors.password = "Passwords do not match"
-            res.status(401).send({
+    try {
+        // search for user.
+        const user = await User.findOne({email: enteredEmail});
+        const passwordCheck = await bcrypt.compare(enteredPassword, user.password);
+        if (!passwordCheck) {
+            errors.password = "Passwords do not match."
+            return res.status(401).send({
                 errors
-            })})
-
-    }).catch( err => {
-        errors.email = "Email does not exist."
-        res.status(401).send({
-            errors
-        })
-    })
+            });
+        }
+        // create JWT token
+        const token = jwt.sign(
+            {
+                userId: user._id,
+                userEmail: user.email,
+            },
+            process.env.ACCESS_TOKEN_SECRET,
+            { 
+                expiresIn: "24h"
+            }
+        );
+        return res.status(200).send({
+            message: "Login successful",
+            email: user.email,
+            id: user._id,
+            token
+        });
+    } catch (error) {
+        return res.status(500).send({error});
+    }
 });
 
 module.exports = router;
