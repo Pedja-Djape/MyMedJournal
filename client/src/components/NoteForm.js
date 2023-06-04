@@ -8,7 +8,7 @@ const NoteForm = ({method, note}) => {
     const navigation = useNavigation();
 
     const cancelEditHandler = () => {
-        navigate('..');
+        navigate('/dashboard/notes');
     }
 
     const isSubmitting = navigation.state === 'submitting';
@@ -65,7 +65,7 @@ export const action = async ({request, params}) => {
     }
     
 
-    const token = store.getState().token;
+    const token = store.getState().auth.token;
     const response = await fetch(url,{
         method: method,
         headers: {
