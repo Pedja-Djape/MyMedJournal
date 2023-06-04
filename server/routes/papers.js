@@ -5,6 +5,7 @@ const parser = new xml2js.Parser();
 
 const router = express.Router();
 const https = require('https');
+const url = require('url');
 
 const HOST = "eutils.ncbi.nlm.nih.gov";
 const BASE_PATH = "/entrez/eutils";
@@ -22,47 +23,48 @@ const errorHandler = (error, req, res, next) => {
     return res.send();
 }
 
-// Function to obtain article UIDs, based on database and query term
-const getArticleUIDs = (db,term) => {
+const genOptionsObject = (query,endpoint) => {
+    const requestUrl =  url.parse(url.format({
+        protocol: 'https',
+        hostname: HOST,
+        pathname: `${BASE_PATH}/${endpoint}`,
+        query
+    }));
     const options = {
-        host: HOST,
-        path: `${BASE_PATH}/esearch.fcgi?db=${db}&term=${term}`,
+        host: requestUrl.host,
+        path: requestUrl.path,
         method: "GET"
     }
-    return new Promise( (resolve,reject) => {
-        https.request(
-            options,
-            (apiResponse) => {
-                let data = '';
-                // get the data 
-                apiResponse.on('data', chunk => data += chunk);
-                // when request completes, resolve the promise with final data object
-                apiResponse.on('end', () => resolve(data));
-            }).on('error',error => { // throw err
-                reject(error.message);
-            }).end();
-    });
+    return options
 }
 
-// Function to obtain article metadata (abstract, citations, etc.)
-const getArticleInfo = (uidList,retmode,rettype,db) => {
-    const options = {
-        host: HOST,
-        path: `${BASE_PATH}/efetch.fcgi?db=${db}&retmode=${retmode}&rettype=${rettype}&id=${uidList}`,
-        method: "GET"
-    }
+const genApiRequestPromise = (options) => {
     return new Promise( (resolve, reject) => {
         https.request(
             options,
             apiResponse => {
                 let data = '';
-                // get data in chunks
-                apiResponse.on('data', chunk => data += chunk);
-                // resolve promise when response ends
+                apiResponse.on('data', chunk => {data += chunk});
+                // when request completes, resolve the promise with final data object
                 apiResponse.on('end', () => resolve(data));
-            }).on('error', error => reject(error.message) )
-            .end();
-    } );
+            }
+        ).on('error',error => { // throw err
+            reject(error.message);
+        }).end();
+    });
+}
+
+// Function to obtain article UIDs, based on database and query term
+const getArticleUIDs = (query) => {
+    const options = genOptionsObject(query,'esearch.fcgi');
+    return genApiRequestPromise(options)
+}
+
+// Function to obtain article metadata (abstract, citations, etc.)
+const getArticleInfo = (uidList,retmode,rettype,db) => {
+    const options = genOptionsObject({db, retmode, rettype},'efetch.fcgi');
+    options.path = options.path + "&id=" + uidList;
+    return genApiRequestPromise(options);
 }
 
 const genArticleObject = (db,article) => {
@@ -72,7 +74,6 @@ const genArticleObject = (db,article) => {
         let abstract = '';
         const uid = article.MedlineCitation[0].PMID[0]._;
         
-        console.log(article.PubmedData[0].ArticleIdList[0].ArticleId);
         let isFreeFT = false;
         for (id of article.PubmedData[0].ArticleIdList[0].ArticleId) {
             if (id['$'].IdType === 'pmc') {
@@ -109,9 +110,8 @@ const genArticleObject = (db,article) => {
 }
 
 router.get("/search", 
-    (req,res,next) => {
+    async (req,res,next) => {
         // get query params
-        
         const db = req.query.db; 
         let term = req.query.term; 
         
@@ -130,59 +130,46 @@ router.get("/search",
         }
         // replace spaces in search query with '+' sign
         term = term.replaceAll(" ","+");
-        // get returned article IDs
-        const UIDs =  getArticleUIDs(db,term);
-        
-        // if successfull call
-        UIDs.then( response => { // response var contains UIDs
-            // convert xml to json
+        try {
+                // get returned article IDs
+            const response = await getArticleUIDs(req.query);
             let data = null;
             parser.parseString(response, (e,d) => data = d);
-            
             if (data.eSearchResult.Count == '0') {
                 const ERROR = {
                     message: "Invalid Query. 0 Articles found matching entered query.",
                     status: 400
                 };
-                next(ERROR);
-                return;
+                return next(ERROR);
+                
             }
             // Array of article IDs
             const aUIDs = data.eSearchResult.IdList[0]['Id'] 
             // get metadata about article
-            const articleInfo = getArticleInfo(aUIDs.toString(),"","",db);
-            articleInfo.then( info => {
-                // convert to json
-                let ainfo = null;
-                parser.parseString(info, (e,d) => ainfo = d);
-                const rval = [];
-                // iterate over pubmed articles
-                for (article of ainfo.PubmedArticleSet.PubmedArticle) {
-                    const articleObject = genArticleObject(db,article);
-                    if (articleObject !== null) {
-                        rval.push(articleObject);
-                    }
-                    
+            const articleInfo = await getArticleInfo(aUIDs.toString(),"","",db);
+
+            let ainfo = null;
+            parser.parseString(articleInfo, (e,d) => ainfo = d);
+            const rval = [];
+            // iterate over pubmed articles
+            for (article of ainfo.PubmedArticleSet.PubmedArticle) {
+                const articleObject = genArticleObject(db,article);
+                if (articleObject !== null) {
+                    rval.push(articleObject);
                 }
                 
-                res.status(200);
-                res.json({
-                    data: rval,
-                    success: true,
-                    message: "",
-                    code: res.statusCode
-                }); 
-            })
-            articleInfo.catch( error => {
-                res.status(400);
-                next(error);
-            })
-        })
-        UIDs.catch( error => {
-            res.status(400);
-            next(error);
-        });
-    
+            }
+            
+            return res.status(200).json({
+                data: rval,
+                success: true,
+                message: "",
+                code: res.statusCode
+            }); 
+        } catch (error) {
+            res.status(500);
+            return next(error);
+        }
 });
 
 
