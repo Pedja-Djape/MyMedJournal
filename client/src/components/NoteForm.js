@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Form, useNavigate, useNavigation, json, redirect } from 'react-router-dom'
 
 import classes from './NoteForm.module.css'
@@ -62,9 +62,10 @@ export const action = async ({request, params}) => {
 
     let url = `http://localhost:9000/notes/`
 
-    if (method === "PATCH") {
-        url = `http://localhost:9000/notes/edit/` + params.noteId;
+    if (method === "PATCH" || method === "DELETE") {
+        url = `http://localhost:9000/notes/${params.noteId}`
     }
+    
 
     // const token = getAuthToken()
     const response = await fetch(url,{
