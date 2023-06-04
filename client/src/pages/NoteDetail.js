@@ -2,6 +2,8 @@ import React, { Suspense } from 'react'
 import NoteItem from '../components/NoteItem';
 import { Await, defer, json, useRouteLoaderData } from 'react-router-dom';
 
+import store from '../store';
+
 const NoteDetail = () => {
 	const {note} = useRouteLoaderData('note-detail');
 	return (
@@ -15,8 +17,13 @@ const NoteDetail = () => {
 	)
 }
 
-const loadNote = async (uid, id) => {
-	const response = await fetch('http://localhost:9000/notes/' + uid + '/'  + id);
+const loadNote = async () => {
+	const token = store.getState().token;
+	const response = await fetch('http://localhost:9000/notes/', {
+		headers: {
+			'Authorization': 'Bearer ' + token
+		}
+	});
 	if (!response.ok) {
 		throw json(
 			{message: "Could not fetch notes"},
@@ -29,8 +36,7 @@ const loadNote = async (uid, id) => {
 }
 
 export const loader =  async ({request, params}) => {
-	const {uid, noteId} = params;
-	const note = await loadNote(uid, noteId)
+	const note = await loadNote()
 	return defer({
 		note: note
 	});
