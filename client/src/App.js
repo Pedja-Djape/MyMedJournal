@@ -38,7 +38,7 @@ const router = createBrowserRouter([
 				action: authAction
 			},
 			{
-				path: 'dashboard/:uid',
+				path: 'dashboard',
 				element: <Protected><DashboardLayout /></Protected>,
 				children: [
 					{
