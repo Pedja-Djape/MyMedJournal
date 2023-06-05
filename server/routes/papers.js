@@ -1,15 +1,17 @@
 const express = require('express');
 const xml2js = require('xml2js');
 
-const parser = new xml2js.Parser();
 
 const router = express.Router();
-const https = require('https');
-const url = require('url');
+
+const apiHelper = require('../util/http');
 
 const HOST = "eutils.ncbi.nlm.nih.gov";
 const BASE_PATH = "/entrez/eutils";
 
+
+
+const parser = new xml2js.Parser();
 
 // Define Error Handling Middleware
 const errorHandler = (error, req, res, next) => {
@@ -23,48 +25,26 @@ const errorHandler = (error, req, res, next) => {
     return res.send();
 }
 
-const genOptionsObject = (query,endpoint) => {
-    const requestUrl =  url.parse(url.format({
-        protocol: 'https',
-        hostname: HOST,
-        pathname: `${BASE_PATH}/${endpoint}`,
-        query
-    }));
-    const options = {
-        host: requestUrl.host,
-        path: requestUrl.path,
-        method: "GET"
-    }
-    return options
-}
-
-const genApiRequestPromise = (options) => {
-    return new Promise( (resolve, reject) => {
-        https.request(
-            options,
-            apiResponse => {
-                let data = '';
-                apiResponse.on('data', chunk => {data += chunk});
-                // when request completes, resolve the promise with final data object
-                apiResponse.on('end', () => resolve(data));
-            }
-        ).on('error',error => { // throw err
-            reject(error.message);
-        }).end();
-    });
-}
-
 // Function to obtain article UIDs, based on database and query term
 const getArticleUIDs = (query) => {
-    const options = genOptionsObject(query,'esearch.fcgi');
-    return genApiRequestPromise(options)
+    const options = apiHelper.genOptionsObject(
+        query,
+        HOST,
+        `${BASE_PATH}/esearch.fcgi`
+    );
+    return apiHelper.genApiRequestPromise(options);
 }
 
 // Function to obtain article metadata (abstract, citations, etc.)
 const getArticleInfo = (uidList,retmode,rettype,db) => {
-    const options = genOptionsObject({db, retmode, rettype},'efetch.fcgi');
+    const options = apiHelper.genOptionsObject(
+        {db, retmode, rettype},
+        HOST,
+        `${BASE_PATH}/efetch.fcgi`
+    );
     options.path = options.path + "&id=" + uidList;
-    return genApiRequestPromise(options);
+    
+    return apiHelper.genApiRequestPromise(options);
 }
 
 const genArticleObject = (db,article) => {
@@ -147,7 +127,7 @@ router.get("/search",
             const aUIDs = data.eSearchResult.IdList[0]['Id'] 
             // get metadata about article
             const articleInfo = await getArticleInfo(aUIDs.toString(),"","",db);
-
+            
             let ainfo = null;
             parser.parseString(articleInfo, (e,d) => ainfo = d);
             const rval = [];
