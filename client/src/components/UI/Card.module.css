@@ -5,6 +5,7 @@
     display: block;
     padding: 1rem;
     border-radius: .5rem;
+    border: 2px solid black;
 }
 
 .card-header {
@@ -37,6 +38,9 @@
 .card-footer {
     margin-top: 1rem;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
 }
 
 .card-footer button {
@@ -44,3 +48,11 @@
     border: 1px solid black;
     border-radius: 5px;
 }
+
+.card-footer button:hover {
+    transform: scale(1.05);
+    transition: 0.3s;
+    background-color: #c5e457;
+}
+
+

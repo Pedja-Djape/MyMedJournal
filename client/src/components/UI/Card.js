@@ -1,5 +1,6 @@
 import classes from "./Card.module.css";
 
+import { BsFillStarFill } from 'react-icons/bs';
 
 const Card = (props) => {
 
@@ -21,6 +22,9 @@ const Card = (props) => {
             </div>
             <div className={classes['card-footer']}>
                 <button type='button'>See More.</button>
+                <div className={classes.fav}>
+                    <button type='button'>Add to favorites.</button>
+                </div>
             </div> 
         </div>
     </>
