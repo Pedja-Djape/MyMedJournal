@@ -43,7 +43,6 @@ const Search = () => {
         setIsModalOpen(true);
     }
 
-    const cardColor = 'white'
 
    
 
@@ -79,7 +78,6 @@ const Search = () => {
                                 <Card 
                                     title={article.title}
                                     body={article.abstract}
-                                    color={cardColor}
                                     id={article.id}
                                     onCardClick={cardClickHandler}
                                 />
