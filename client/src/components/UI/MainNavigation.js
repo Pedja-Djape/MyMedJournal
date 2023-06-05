@@ -34,6 +34,18 @@ const MainNavigation = () => {
                 </div>
                 <div>
                     <ul className={classes.list}>
+                        {
+                            isAuthenticated && (
+                                <li>
+                                    <NavLink 
+                                        to='/dashboard'
+                                        className={({ isActive }) => isActive ? classes.active : undefined }
+                                    >
+                                        Dashboard
+                                    </NavLink>
+                                </li>
+                            )
+                        }
                         <li>
                             <NavLink 
                                 to='/' 
