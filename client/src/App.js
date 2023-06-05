@@ -18,6 +18,7 @@ import EditNote from "./pages/EditNote";
 import NewNotePage from './pages/NewNote'
 import Protected from "./components/Protected";
 import FavoritesLayout from "./pages/FavoritesLayout";
+import Favorites, { loader as favsLoader } from "./pages/Favorites";
  
 
 const router = createBrowserRouter([
@@ -85,7 +86,8 @@ const router = createBrowserRouter([
 						children: [
 							{
 								index: true,
-								
+								element: <Favorites />,
+								loader: favsLoader
 							}
 
 						]
