@@ -8,21 +8,26 @@ import ArticlePopup from "../components/ArticlePopup/ArticlePopup";
 
 const Search = () => {
     const [articlesData, setArticlesData] = useState(null);
-
+    const [ searchTerm, setSearchTerm ] = useState(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [cardInfo, setCardInfo] = useState({});
     const [retStart, setRetStart] = useState(0);
 
 
     const searchHandler = async (enteredValue) => {
-        if (enteredValue.trim().length === 0) {
+        setSearchTerm(enteredValue);
+        getArticleData(enteredValue);
+    } 
+
+    const getArticleData = async (queryTerm) => {
+        if (!queryTerm || queryTerm.trim().length === 0) {
             return;
         }
         const path = "/papers/search?" + new URLSearchParams({
             db: "pubmed",
-            term: enteredValue,
+            term: queryTerm,
             retstart: retStart,
-            retmax: 5
+            retmax: 6
         });
         const response = await fetch(path);
         if (!response.ok) {
@@ -30,10 +35,10 @@ const Search = () => {
         }
         const data = await response.json();
         setArticlesData(data.data);
-    } 
+    }
 
     useEffect(() => {
-        searchHandler()
+        getArticleData(searchTerm);
     }, [retStart]
     )
 
@@ -90,13 +95,25 @@ const Search = () => {
             </div>
             {
                 articlesData && (
-                    <div className="flex justify-center">
+                    <div className="flex justify-center gap 1rem">
+                        {
+                        retStart > 0 && (
+                            <button onClick={() => {
+                                setRetStart(value => value - 6) 
+                            }}
+                            className="p-4 m-2 color white bg-blue-700 rounded-[4px] w-[100px]"    
+                        >
+                                Back.
+                            </button>
+                        )
+                    }
                     <button onClick={() => {
-                            setRetStart(value => value + 5) 
+                            setRetStart(value => value + 6) 
                         }} 
                         className="p-4 m-2 color white bg-blue-700 rounded-[4px] ">
                             Next page.
                     </button>
+                    
             </div>
                 )
             }
