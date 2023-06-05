@@ -1,15 +1,39 @@
-import { Form, useNavigate, useNavigation, json, redirect } from 'react-router-dom'
+import { Form, useNavigate, useNavigation, json, redirect , useActionData} from 'react-router-dom';
+import useInput from '../hooks/useInput';
 import store from '../store'
  
 import classes from './NoteForm.module.css'
+import { useEffect } from 'react';
 
 const NoteForm = ({method, note}) => {
     const navigate = useNavigate();
     const navigation = useNavigation();
+    const data = useActionData();
 
     const cancelEditHandler = () => {
         navigate('/dashboard/notes');
     }
+
+    useEffect( () => {
+        
+    }, []);
+
+    const {
+        value: enteredTitle,
+        hasError: titleHasError,
+        isValid: titleIsValid,
+        valueChangeHandler: titleChangedHandler,
+        inputBlurHandler: titleBlueHandler
+    } = useInput((title) => title.trim() === '');
+
+    const {
+        value: enteredContent,
+        hasError: contentHasError,
+        isValid: contentIsValid,
+        valueChangeHandler: contentChangedHandler,
+        inputBlurHandler: contentBlueHandler
+    } = useInput((content) => content.trim() === '');
+
 
     const isSubmitting = navigation.state === 'submitting';
     return (
@@ -23,6 +47,7 @@ const NoteForm = ({method, note}) => {
                         name='title'
                         required
                         defaultValue={note ? note.title : ''}
+                        onChange={titleChangedHandler}
                     />
                 </p>
                 <p>
@@ -39,7 +64,7 @@ const NoteForm = ({method, note}) => {
                     <button type='button' onClick={cancelEditHandler} disabled={isSubmitting}>
                         Cancel.
                     </button>
-                    <button disabled={isSubmitting}>
+                    <button disabled={isSubmitting || titleHasError || contentHasError }>
                         {isSubmitting ? "Saving changes ..." : "Save changes."}
                     </button>
                 </div>
