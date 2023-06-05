@@ -38,9 +38,14 @@ const Card = (props) => {
             </div>
             <div className={classes['card-footer']}>
                 <button onClick={handleCardClick} type='button'>See More.</button>
-                <div className={classes.fav}>
-                    <button onClick={favHandler} type='button'>{buttonInfo.title}</button>
-                </div>
+                {
+                    authState && authState.isAuthenticated &&( 
+                        <div className={classes.fav}>
+                            <button onClick={favHandler} type='button'>{buttonInfo.title}</button>
+                        </div>
+                    )
+                }
+                
             </div> 
         </div>
     </>
