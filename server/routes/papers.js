@@ -6,6 +6,8 @@ const router = express.Router();
 
 const apiHelper = require('../util/http');
 const papersHelper = require('../util/papers');
+const authenticateToken = require('../middleware/auth');
+const Articles = require('../models/acticles.model')
 
 const HOST = "eutils.ncbi.nlm.nih.gov";
 const BASE_PATH = "/entrez/eutils";
@@ -112,6 +114,15 @@ router.get("/search",
             return next(error);
         }
 });
+
+router.get('/', authenticateToken, async (req, res, next) => {
+    const uid = req.user.userId;
+    const userFavorites = await Articles.findOne({_id: uid}).exec();
+    res.status(200).send({
+        message: "Successfully obtained user's favorite articles.",
+        favorites: userFavorites.articles
+    });
+})
 
 
 
