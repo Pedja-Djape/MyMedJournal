@@ -87,6 +87,10 @@ const Search = () => {
                                     body={article.abstract}
                                     id={article.id}
                                     onCardClick={cardClickHandler}
+                                    buttonInfo={{
+                                        method: "PUT",
+                                        title: "Add to favorites."
+                                    }}
                                 />
                             </div>
                         ) :
