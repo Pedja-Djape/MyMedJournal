@@ -17,6 +17,7 @@ import {action as manipulateNoteAction } from './components/NoteForm';
 import EditNote from "./pages/EditNote";
 import NewNotePage from './pages/NewNote'
 import Protected from "./components/Protected";
+import FavoritesLayout from "./pages/FavoritesLayout";
  
 
 const router = createBrowserRouter([
@@ -76,6 +77,17 @@ const router = createBrowserRouter([
 								element: <NewNotePage />,
 								action: manipulateNoteAction
 							}
+						]
+					},
+					{
+						path: 'favorites',
+						element: <FavoritesLayout />,
+						children: [
+							{
+								index: true,
+								
+							}
+
 						]
 					}
 				]
