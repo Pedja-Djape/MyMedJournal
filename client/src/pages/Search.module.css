@@ -48,15 +48,13 @@
 }
 
 
-.cards-container:hover .card {
-    transform: scale(0.95);
-}
+
 
 
 .container .card:hover{
     opacity: 1;
     filter: blur(0);
-    transform: scale(1.2);
+    transform: scale(1.15);
 }
 
 
