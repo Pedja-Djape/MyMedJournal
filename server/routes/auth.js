@@ -5,6 +5,8 @@ require('dotenv').config();
 
 const User = require('../models/user.model');
 const Notes = require('../models/note.model');
+const Articles = require('../models/acticles.model');
+
 const { validateCredentials } = require('../util/validateCreds');
 
 const router = express.Router();
@@ -43,12 +45,14 @@ router.post("/signup", async (req, res) => {
                 expiresIn: "24h"
             }
         );
-        console.log(user)
-        const newUserNotes = await new Notes({
+        await new Notes({
             _id: result._id.toString(),
             notes: []
         }).save();
-        
+        await new Articles({
+            _id: result._id.toString(),
+            articles: []
+        }).save();
         return res.status(200).send({
             message: "User Created Successfully",
             email: result.email,
