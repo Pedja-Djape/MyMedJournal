@@ -1,6 +1,6 @@
 import classes from "./Card.module.css";
 
-import { BsFillStarFill } from 'react-icons/bs';
+
 
 const Card = (props) => {
 
