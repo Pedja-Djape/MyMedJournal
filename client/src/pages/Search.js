@@ -81,7 +81,7 @@ const Search = () => {
                 {
                     articlesData && articlesData.length > 0 ?
                         articlesData.map( (article) => 
-                            <div key={article.id} className={classes.card} style={{cursor: 'pointer'}}>
+                            <div key={article.id} className={classes.card}>
                                 <Card 
                                     title={article.title}
                                     body={article.abstract}
