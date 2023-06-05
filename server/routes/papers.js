@@ -124,6 +124,32 @@ router.get('/', authenticateToken, async (req, res, next) => {
     });
 })
 
+router.put('/', authenticateToken, async (req, res) => {
+    const uid = req.user.userId;
+    const aid = req.body.articleId;
+    await Articles.updateOne(
+        {_id: uid},
+        {$addToSet: { articles: aid }}
+    )
+    res.status(200).send({
+        message: "Successfully added article to favorites.",
+        articleId: aid
+    })
+});
+
+router.delete('/', authenticateToken, async (req,res) => {
+    const uid = req.user.userId;
+    const aid = req.body.articleId;
+    await Articles.updateOne(
+        { _id: uid },
+        { $pull: { articles: { $in: aid } } }
+    );
+    res.status(200).send({
+        message: "Sucessfully removed article from favorites.",
+        articleId: aid
+    });
+})
+
 
 
 router.use(errorHandler);
