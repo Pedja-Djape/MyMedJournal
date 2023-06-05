@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchTools/SearchBar";
 import classes from './Search.module.css';
 import Card from "../components/UI/Card";
@@ -6,18 +6,20 @@ import Modal from "../components/UI/Modal";
 import ArticlePopup from "../components/ArticlePopup/ArticlePopup";
 
 
-
 const Search = () => {
-    const [articlesData, setArticlesData] = useState({});
+    const [articlesData, setArticlesData] = useState(null);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [cardInfo, setCardInfo] = useState({});
+    const [retStart, setRetStart] = useState(0);
 
 
     const searchHandler = async (enteredValue) => {
         const path = "/papers/search?" + new URLSearchParams({
             db: "pubmed",
-            term: enteredValue
+            term: enteredValue,
+            retstart: retStart,
+            retmax: 5
         });
         const response = await fetch(path);
         if (!response.ok) {
@@ -26,6 +28,11 @@ const Search = () => {
         const data = await response.json();
         setArticlesData(data.data);
     } 
+
+    useEffect(() => {
+        searchHandler()
+    }, [retStart]
+    )
 
     const cardClickHandler = (title,abstract,id) => {
         setCardInfo({
@@ -51,7 +58,7 @@ const Search = () => {
                         <ArticlePopup 
                             title={cardInfo.title} 
                             body={`${cardInfo.abstract}`}
-                            color='#5ca1fa'
+                            color='#f2c11d'
                             onClose={() => setIsModalOpen(false)}
                             id={cardInfo.id}
                         />
@@ -66,7 +73,7 @@ const Search = () => {
             </div>
             <div className={classes['cards-container']}>
                 {
-                    articlesData.length > 0 ?
+                    articlesData && articlesData.length > 0 ?
                         articlesData.map( (article) => 
                             <div key={article.id} className={classes.card} style={{cursor: 'pointer'}}>
                                 <Card 
@@ -81,6 +88,19 @@ const Search = () => {
                         null
                 }
             </div>
+            {
+                articlesData && (
+                    <div className="flex justify-center">
+                    <button onClick={() => {
+                            setRetStart(value => value + 5) 
+                        }} 
+                        className="p-4 m-2 color white bg-blue-700 rounded-[4px] ">
+                            Next page.
+                    </button>
+            </div>
+                )
+            }
+            
             
             
         </div>
