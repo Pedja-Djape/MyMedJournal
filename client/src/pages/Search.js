@@ -8,15 +8,19 @@ import ArticlePopup from "../components/ArticlePopup/ArticlePopup";
 
 const Search = () => {
     const [articlesData, setArticlesData] = useState(null);
-    const [ searchTerm, setSearchTerm ] = useState(null)
+    const [ _, setSearchTerm ] = useState(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [cardInfo, setCardInfo] = useState({});
     const [retStart, setRetStart] = useState(0);
 
+    const [isLoading, setIsLoading] = useState(false)
+
 
     const searchHandler = async (enteredValue) => {
+        setIsLoading(true)
         setSearchTerm(enteredValue);
         getArticleData(enteredValue);
+        setIsLoading(false);
     } 
 
     const getArticleData = async (queryTerm) => {
@@ -27,7 +31,7 @@ const Search = () => {
             db: "pubmed",
             term: queryTerm,
             retstart: retStart,
-            retmax: 6
+            retmax: 100
         });
         const response = await fetch(path);
         if (!response.ok) {
@@ -36,11 +40,6 @@ const Search = () => {
         const data = await response.json();
         setArticlesData(data.data);
     }
-
-    useEffect(() => {
-        getArticleData(searchTerm);
-    }, [retStart]
-    )
 
     const cardClickHandler = (title,abstract,id) => {
         setCardInfo({
@@ -80,7 +79,7 @@ const Search = () => {
             <div className={classes['cards-container']}>
                 {
                     articlesData && articlesData.length > 0 ?
-                        articlesData.map( (article) => 
+                        articlesData.slice(retStart, retStart + 6).map( (article) => 
                             <div key={article.id} className={classes.card}>
                                 <Card 
                                     title={article.title}
@@ -101,20 +100,20 @@ const Search = () => {
                 articlesData && (
                     <div className="flex justify-center gap 1rem">
                         {
-                        retStart > 0 && (
-                            <button onClick={() => {
-                                setRetStart(value => value - 6) 
-                            }}
-                            className="p-4 m-2 color white bg-blue-700 rounded-[4px] w-[100px]"    
-                        >
-                                Back.
-                            </button>
-                        )
-                    }
+                            retStart > 0 && (
+                                <button onClick={() => {
+                                    setRetStart(value => value - 6) 
+                                }}
+                                className="p-4 m-2 color white bg-[#f6c666] rounded-[4px] w-[100px]"    
+                            >
+                                    Back.
+                                </button>
+                            )
+                        }
                     <button onClick={() => {
                             setRetStart(value => value + 6) 
                         }} 
-                        className="p-4 m-2 color white bg-blue-700 rounded-[4px] ">
+                        className="p-4 m-2 color white bg-[#f6c666] rounded-[4px] ">
                             Next page.
                     </button>
                     
