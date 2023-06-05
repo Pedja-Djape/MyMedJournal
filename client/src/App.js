@@ -5,10 +5,11 @@ import {
 	RouterProvider
  } from "react-router-dom";
 
- import RootLayout from './pages/RootLayout'
- import Home from './pages/Home'
- import Search from './pages/Search';
- import AuthenticationPage, {action as authAction} from './pages/Authentication';
+import RootLayout from './pages/RootLayout'
+import Home from './pages/Home'
+import ErrorPage from './pages/Error';
+import Search from './pages/Search';
+import AuthenticationPage, {action as authAction} from './pages/Authentication';
 import DashboardLayout from "./pages/DashboardLayout";
 import NotesPage, {loader as notesLoader} from "./pages/Notes";
 import NotesLayout from "./pages/NotesLayout";
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <RootLayout />,
+		errorElement: <ErrorPage />,
 		children: [
 			{	
 				index: true,
