@@ -6,13 +6,13 @@ const DashboardNavigation = () => {
     <>
     <div style={{paddingTop: '3rem'}}>
         <Sidebar>
-                <Menu>
-                    <MenuItem component={<Link to='/dashboard/notes' />}>Notes</MenuItem>
-                    <MenuItem component={<Link to='/dashboard/favorites' />} >Favorite Articles</MenuItem>
-                </Menu>
-            </Sidebar>
+            <Menu>
+                <MenuItem component={<Link to='/dashboard/notes' />}>Notes</MenuItem>
+                <MenuItem component={<Link to='/dashboard/favorites' />} >Favorite Articles</MenuItem>
+            </Menu>
+        </Sidebar>
     </div>
-        
+
     </>
   )
 }
