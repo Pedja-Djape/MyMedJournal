@@ -7,13 +7,23 @@ const Dashboard = () => {
         <h1>Hi, welcome to your dashboard!</h1>
         <div className='flex justify-center gap-8'>
             <Link to='/dashboard/notes'>
-                <div className='w-[30rem] h-[30rem] bg-[#f2c11d] text-center text-white rounded-xl relative border-black border-3'>
-                    <h1 className=' absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]'>Notes</h1>
+                <div className='
+                    w-[30rem] h-[30rem] bg-[#f2c11d]
+                    text-center text-white 
+                    rounded-xl border-black border-3 
+                    flex justify-center items-center
+                '>
+                        <h1 >Notes</h1>
                 </div>
             </Link>
             <Link to='/dashboard/favorites'>
-                <div className='w-[30rem] h-[30rem] bg-[#f2c11d] text-center text-white rounded-xl relative border-black border-3'>
-                    <h1 className=' absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]'>Favorites</h1>
+                <div className='
+                    w-[30rem] h-[30rem] bg-[#f2c11d]
+                    text-center text-white 
+                    rounded-xl border-black border-3 
+                    flex justify-center items-center'
+                >
+                    <h1>Favorites</h1>
                 </div>
             </Link>
             
