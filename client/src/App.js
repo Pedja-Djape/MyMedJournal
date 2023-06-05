@@ -20,6 +20,7 @@ import NewNotePage from './pages/NewNote'
 import Protected from "./components/Protected";
 import FavoritesLayout from "./pages/FavoritesLayout";
 import Favorites, { loader as favsLoader } from "./pages/Favorites";
+import Dashboard from "./components/Dashboard";
  
 
 const router = createBrowserRouter([
@@ -47,7 +48,7 @@ const router = createBrowserRouter([
 				children: [
 					{
 						index: true,
-						element: <div>Hi</div>
+						element: <Dashboard />
 					},
 					{
 						path: 'notes',
