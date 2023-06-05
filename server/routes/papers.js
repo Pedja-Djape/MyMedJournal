@@ -57,7 +57,7 @@ router.get("/search", async (req,res,next) => {
     try {
         let aUIDs;
         let db;
-        if (!req.body.hasOwnProperty("articleIds")) {
+        if (!req.query.hasOwnProperty("articleIds")) {
             
             // get query params
             db = req.query.db; 
@@ -91,14 +91,15 @@ router.get("/search", async (req,res,next) => {
                 
             }
             // Array of article IDs
-            aUIDs = data.eSearchResult.IdList[0]['Id'] 
+            aUIDs = data.eSearchResult.IdList[0]['Id'].toString()
         }
         else {
-            aUIDs = req.body.articleIds;
+            aUIDs = req.query.articleIds;
+            db = req.query.db
         }
 
         // get metadata about article
-        const articleInfo = await getArticleInfo(aUIDs.toString(),"","",db);
+        const articleInfo = await getArticleInfo(aUIDs,"","",db);
         let ainfo = null;
         parser.parseString(articleInfo, (e,d) => ainfo = d);
         const rval = [];
