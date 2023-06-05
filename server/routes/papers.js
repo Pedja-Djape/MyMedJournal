@@ -52,29 +52,33 @@ const getArticleInfo = (uidList,retmode,rettype,db) => {
 
 
 
-router.get("/search", 
-    async (req,res,next) => {
-        // get query params
-        const db = req.query.db; 
-        let term = req.query.term; 
-        
-        // *** VALIDATE DB ***
-        if (!db || db.trim() === "") {
-            const err = new Error("Please provide a valid database to search a query for.");
-            err.status = 400;
-            return next(err);
-        }
+router.get("/search", async (req,res,next) => {
 
-        // ***VALIDATE TERM***
-        if (!term || term.trim() === "") {
-            const err = new Error("Please provide a valid query term to search in a database.");
-            err.status = 400;
-            return next(err); 
-        }
-        // replace spaces in search query with '+' sign
-        term = term.replaceAll(" ","+");
-        try {
-                // get returned article IDs
+    try {
+        let aUIDs;
+        let db;
+        if (!req.body.hasOwnProperty("articleIds")) {
+            
+            // get query params
+            db = req.query.db; 
+            let term = req.query.term; 
+            // *** VALIDATE DB ***
+            if (!db || db.trim() === "") {
+                const err = new Error("Please provide a valid database to search a query for.");
+                err.status = 400;
+                return next(err);
+            }
+
+            // ***VALIDATE TERM***
+            if (!term || term.trim() === "") {
+                const err = new Error("Please provide a valid query term to search in a database.");
+                err.status = 400;
+                return next(err); 
+            }
+            // replace spaces in search query with '+' sign
+            term = term.replaceAll(" ","+");
+            
+                    // get returned article IDs
             const response = await getArticleUIDs(req.query);
             let data = null;
             parser.parseString(response, (e,d) => data = d);
@@ -87,32 +91,36 @@ router.get("/search",
                 
             }
             // Array of article IDs
-            const aUIDs = data.eSearchResult.IdList[0]['Id'] 
-            // get metadata about article
-            const articleInfo = await getArticleInfo(aUIDs.toString(),"","",db);
-            
-            let ainfo = null;
-            parser.parseString(articleInfo, (e,d) => ainfo = d);
-            const rval = [];
-            // iterate over pubmed articles
-            for (article of ainfo.PubmedArticleSet.PubmedArticle) {
-                const articleObject = papersHelper.genArticleObject(db,article);
-                if (articleObject !== null) {
-                    rval.push(articleObject);
-                }
-                
+            aUIDs = data.eSearchResult.IdList[0]['Id'] 
+        }
+        else {
+            aUIDs = req.body.articleIds;
+        }
+
+        // get metadata about article
+        const articleInfo = await getArticleInfo(aUIDs.toString(),"","",db);
+        let ainfo = null;
+        parser.parseString(articleInfo, (e,d) => ainfo = d);
+        const rval = [];
+        // iterate over pubmed articles
+        for (article of ainfo.PubmedArticleSet.PubmedArticle) {
+            const articleObject = papersHelper.genArticleObject(db,article);
+            if (articleObject !== null) {
+                rval.push(articleObject);
             }
             
-            return res.status(200).json({
-                data: rval,
-                success: true,
-                message: "",
-                code: res.statusCode
-            }); 
-        } catch (error) {
-            res.status(500);
-            return next(error);
         }
+        
+        return res.status(200).json({
+            data: rval,
+            success: true,
+            message: "",
+            code: res.statusCode
+        }); 
+    } catch (error) {
+        res.status(500);
+        return next(error);
+    }
 });
 
 router.get('/', authenticateToken, async (req, res, next) => {
