@@ -15,6 +15,9 @@ const Search = () => {
 
 
     const searchHandler = async (enteredValue) => {
+        if (enteredValue.trim().length === 0) {
+            return;
+        }
         const path = "/papers/search?" + new URLSearchParams({
             db: "pubmed",
             term: enteredValue,
@@ -57,7 +60,6 @@ const Search = () => {
                         <ArticlePopup 
                             title={cardInfo.title} 
                             body={`${cardInfo.abstract}`}
-                            color='#f2c11d'
                             onClose={() => setIsModalOpen(false)}
                             id={cardInfo.id}
                         />
