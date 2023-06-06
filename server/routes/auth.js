@@ -66,7 +66,7 @@ router.post("/signup", async (req, res) => {
                 email: "Username already exists!"
             })
         }
-        console.log(error)
+        
         return res.status(500).send({error});
     }
     

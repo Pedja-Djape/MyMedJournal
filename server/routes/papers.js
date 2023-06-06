@@ -18,14 +18,12 @@ const parser = new xml2js.Parser();
 
 // Define Error Handling Middleware
 const errorHandler = (error, req, res, next) => {
-    res.json({
+    return res.status(error.status).json({
         message: error.message,
         code: error.status || 400,
         data: [],
         success: false 
     })
-    res.status(error.status)
-    return res.send();
 }
 
 // Function to obtain article UIDs, based on database and query term
@@ -111,7 +109,6 @@ router.get("/search", async (req,res,next) => {
             }
             
         }
-        
         return res.status(200).json({
             data: rval,
             success: true,
@@ -126,37 +123,61 @@ router.get("/search", async (req,res,next) => {
 
 router.get('/', authenticateToken, async (req, res, next) => {
     const uid = req.user.userId;
-    const userFavorites = await Articles.findOne({_id: uid}).exec();
-    res.status(200).send({
-        message: "Successfully obtained user's favorite articles.",
-        favorites: userFavorites.articles
-    });
+    try {
+        const userFavorites = await Articles.findOne({_id: uid}).exec();
+        return res.status(200).send({
+            message: "Successfully obtained user's favorite articles.",
+            favorites: userFavorites.articles
+        });
+    } catch (error) {
+        return res.status(500).send({
+            message: "Failed to obtain favorite articles.",
+            error
+        })
+    }
+    
 })
 
 router.put('/', authenticateToken, async (req, res) => {
     const uid = req.user.userId;
     const aid = req.body.articleId;
-    await Articles.updateOne(
-        {_id: uid},
-        {$addToSet: { articles: aid }}
-    )
-    res.status(200).send({
-        message: "Successfully added article to favorites.",
-        articleId: aid
-    })
+    try {
+        await Articles.updateOne(
+            {_id: uid},
+            {$addToSet: { articles: aid }}
+        )
+        return res.status(200).send({
+            message: "Successfully added article to favorites.",
+            articleId: aid
+        })
+    } catch (error) {
+        return res.status(500).send({
+            message: "Failed to add article to favorites.",
+            error
+        })
+    }
+    
 });
 
 router.delete('/', authenticateToken, async (req,res) => {
     const uid = req.user.userId;
     const aid = req.body.articleId;
-    await Articles.updateOne(
-        { _id: uid },
-        { $pull: { articles: { $in: aid } } }
-    );
-    res.status(200).send({
-        message: "Sucessfully removed article from favorites.",
-        articleId: aid
-    });
+    try {
+        await Articles.updateOne(
+            { _id: uid },
+            { $pull: { articles: { $in: aid } } }
+        );
+        return res.status(200).send({
+            message: "Sucessfully removed article from favorites.",
+            articleId: aid
+        });
+    } catch (error) {
+        res.status(500).send({
+            message: "Failed to remove article from favorites.",
+            error
+        })
+    }
+    
 })
 
 
