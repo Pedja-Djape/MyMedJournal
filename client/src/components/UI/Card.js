@@ -1,11 +1,12 @@
 import { useSelector } from "react-redux";
 import classes from "./Card.module.css";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 
 
 const Card = (props) => {
-
+    const [isFavorite, setIsFavorite] = useState()
     const { buttonInfo } = props;
     const authState = useSelector(state => state.auth);   
     const navigate = useNavigate(); 
@@ -24,6 +25,8 @@ const Card = (props) => {
                 articleId: props.id
             })
         });
+        buttonInfo.title = buttonInfo.title === 'Add to favorites.' ? "Remove from favorites." : 'Add to favorites.'
+        buttonInfo.method = buttonInfo.method === 'PUT' ? "DELETE" : "PUT"
         navigate('.')
         
     }
@@ -39,7 +42,7 @@ const Card = (props) => {
             <div className={classes['card-footer']}>
                 <button onClick={handleCardClick} type='button'>See More.</button>
                 {
-                    authState && authState.isAuthenticated &&( 
+                    authState && authState.isAuthenticated && ( 
                         <div className={classes.fav}>
                             <button onClick={favHandler} type='button'>{buttonInfo.title}</button>
                         </div>
