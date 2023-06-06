@@ -73,7 +73,7 @@ const Search = () => {
 
             <div className={classes['flex-container']}>
                 <div className={classes['search-bar']}>
-                    {isLoading && <SearchBar onSetQuery={searchHandler} />}
+
                     <SearchBar onSetQuery={searchHandler} />
                 </div>
             </div>
