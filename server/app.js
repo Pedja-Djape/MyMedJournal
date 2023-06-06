@@ -4,9 +4,8 @@ const cors = require('cors');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+const RateLimit = require('express-rate-limit');
 const dbConnect = require('./db/dbConnect');
-
 
 // setup routers
 const indexRouter = require('./routes/index');
@@ -15,6 +14,14 @@ const authRouter = require('./routes/auth');
 const notesRouter = require('./routes/notes');
 
 var app = express();
+
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 20,
+});
+
+app.use(limiter)
+
 dbConnect();
 
 var corsOptions = {
