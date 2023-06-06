@@ -8,7 +8,6 @@ import ArticlePopup from "../components/ArticlePopup/ArticlePopup";
 
 const Search = () => {
     const [articlesData, setArticlesData] = useState(null);
-    const [ _, setSearchTerm ] = useState(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [cardInfo, setCardInfo] = useState({});
     const [retStart, setRetStart] = useState(0);
@@ -17,10 +16,11 @@ const Search = () => {
 
 
     const searchHandler = async (enteredValue) => {
-        setIsLoading(true)
-        setSearchTerm(enteredValue);
+        setIsLoading(true);
+        console.log(isLoading)
         getArticleData(enteredValue);
         setIsLoading(false);
+        console.log(isLoading)
     } 
 
     const getArticleData = async (queryTerm) => {
@@ -73,12 +73,18 @@ const Search = () => {
 
             <div className={classes['flex-container']}>
                 <div className={classes['search-bar']}>
+                    {isLoading && <SearchBar onSetQuery={searchHandler} />}
                     <SearchBar onSetQuery={searchHandler} />
                 </div>
             </div>
             <div className={classes['cards-container']}>
                 {
-                    articlesData && articlesData.length > 0 ?
+                    isLoading && (
+                       <h1 className="text-center text-white">Loading ...</h1>
+                    )
+                }
+                {
+                    !isLoading && articlesData && articlesData.length > 0 ?
                         articlesData.slice(retStart, retStart + 6).map( (article) => 
                             <div key={article.id} className={classes.card}>
                                 <Card 
