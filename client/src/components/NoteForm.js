@@ -23,15 +23,12 @@ const NoteForm = ({method, note}) => {
         hasError: titleHasError,
         isValid: titleIsValid,
         valueChangeHandler: titleChangedHandler,
-        inputBlurHandler: titleBlueHandler
     } = useInput((title) => title.trim() === '');
 
     const {
         value: enteredContent,
         hasError: contentHasError,
         isValid: contentIsValid,
-        valueChangeHandler: contentChangedHandler,
-        inputBlurHandler: contentBlueHandler
     } = useInput((content) => content.trim() === '');
 
 
