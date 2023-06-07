@@ -25,7 +25,7 @@ app.use(limiter)
 dbConnect();
 
 var corsOptions = {
-  origin: ["http://localhost:3000"], // allow from this origin
+  origin: ["client:3000"], // allow from this origin
 }
 
 app.use(cors(corsOptions));
