@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SearchBar from "../components/SearchTools/SearchBar";
 import classes from './Search.module.css';
 import Card from "../components/UI/Card";
@@ -27,7 +27,7 @@ const Search = () => {
         if (!queryTerm || queryTerm.trim().length === 0) {
             return;
         }
-        const path = "/papers/search?" + new URLSearchParams({
+        const path = "server:9000/papers/search?" + new URLSearchParams({
             db: "pubmed",
             term: queryTerm,
             retstart: retStart,
