@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import Card from './UI/Card'
 import Modal from './UI/Modal';
 import ArticlePopup from "../components/ArticlePopup/ArticlePopup";
+import { Link } from 'react-router-dom';
 
 const FavoritesList = ({favs}) => {
+    console.log(favs)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [cardInfo, setCardInfo] = useState({});
 
@@ -35,10 +37,10 @@ const FavoritesList = ({favs}) => {
                 </Modal> :
             null
             }
-        <div className='flex flex-col items-center justify-center '>
+        <div className='flex flex-col items-center justify-center w-full'>
             <h1>Your favorite articles</h1>
             <div className='flex justify-center flex-wrap gap-2'>
-                { favs.map(fav => (
+                { favs && favs.map(fav => (
                     <div  key={fav.id} className='p-6'>
                         <Card 
                             title={fav.title}
@@ -49,8 +51,17 @@ const FavoritesList = ({favs}) => {
                         />
                     </div>
                     
-                ))
-            }
+                    ))
+                }
+                {
+                    favs && favs.length === 0 && (
+                        <p className='pt-12 text-3xl text-white'>
+                            Seems like you don't have any favorites right now. 
+                            Head on to the <Link to='/search' className='underline text-[#f2c11d]'>search tool</Link> and
+                            start reading!
+                        </p>
+                    )
+                }
             </div>
         </div>
         
