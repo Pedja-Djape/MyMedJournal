@@ -32,7 +32,7 @@ router.get('/', authenticateToken, async (req, res) => {
 
 router.get('/:noteId', authenticateToken , async (req, res) => {
     const uid = req.user.userId;
-    if (!req.params.hasOwnProperty('noteId') || req.params.noteId === null || req.params.noteId === undefined || req.params.noteId === '') {
+    if (!noteId) {
         return res.status(400).send({
             message: "Error! Please specifiy a valid noteId.",
             note: []
@@ -110,7 +110,7 @@ router.post('/', authenticateToken, async (req, res) => {
     // add try {} ... catch {} blocks for validation errors.
     const { userId } = req.user
     const { title: noteTitle, content: noteContent} = req.body;
-    if (userId && title && content) {
+    if (userId && noteTitle && noteContent) {
         // fetch users notes
         try {
             const userNotes = await Notes.findOne({_id: userId}).exec();
@@ -150,20 +150,20 @@ router.post('/', authenticateToken, async (req, res) => {
             })
         }
     }
-    if (!title) {
-        return res.status(200).send({
+    if (!noteTitle) {
+        return res.status(400).send({
             message: "Error! Please provide a valid title.",
-            title: title
+            title: noteTitle
         })
     }
-    if (!content) { 
-        return res.status(200).send({
+    if (!noteContent) { 
+        return res.status(400).send({
             message: "Error! Please provide valid note content.",
-            content: content
+            content: noteContent
         })
     }
     if (!noteId) {
-        return res.status(200).send({
+        return res.status(400).send({
             message: "Error! Please provide a valid note id.",
             noteId: noteId
         });
