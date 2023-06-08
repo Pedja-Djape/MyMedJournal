@@ -62,7 +62,7 @@ router.get("/search", async (req,res,next) => {
         let aUIDs;
         let db;
         if (!req.query.hasOwnProperty("articleIds")) {
-            
+
             if (req.query.hasOwnProperty('term') || req.query.db === '') {
                 return res.status(400).send({
                     message: "Error! Please specify a search term.",
@@ -156,20 +156,26 @@ router.get('/', authenticateToken, async (req, res, next) => {
 router.put('/', authenticateToken, async (req, res) => {
     const uid = req.user.userId;
     const aid = req.body.articleId;
+    if (aid === null || aid === undefined || aid === '') {
+        return res.status(200).send({
+            message: "Error! Please provide a valid article ID.",
+            articleId: ''
+        });
+    }
     try {
         await Articles.updateOne(
             {_id: uid},
             {$addToSet: { articles: aid }}
-        )
+        );
         return res.status(200).send({
             message: "Successfully added article to favorites.",
             articleId: aid
-        })
+        });
     } catch (error) {
         return res.status(500).send({
             message: "Failed to add article to favorites.",
             error
-        })
+        });
     }
     
 });
