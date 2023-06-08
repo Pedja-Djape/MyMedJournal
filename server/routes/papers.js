@@ -155,13 +155,14 @@ router.get('/', authenticateToken, async (req, res, next) => {
 
 router.put('/', authenticateToken, async (req, res) => {
     const uid = req.user.userId;
-    const aid = req.body.articleId;
-    if (aid === null || aid === undefined || aid === '') {
+    if (req.body.hasOwnProperty('articleId') || aid === null || aid === undefined || aid === '') {
         return res.status(200).send({
             message: "Error! Please provide a valid article ID.",
             articleId: ''
         });
     }
+    const aid = req.body.articleId;
+    
     try {
         await Articles.updateOne(
             {_id: uid},
