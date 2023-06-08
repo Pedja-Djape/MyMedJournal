@@ -27,7 +27,7 @@ const Search = () => {
         if (!queryTerm || queryTerm.trim().length === 0) {
             return;
         }
-        const path = "server:9000/papers/search?" + new URLSearchParams({
+        const path = "http://localhost:9000/papers/search?" + new URLSearchParams({
             db: "pubmed",
             term: queryTerm,
             retstart: retStart,
