@@ -74,7 +74,7 @@ router.get("/search", async (req,res,next) => {
                 return next(err); 
             }
             // replace spaces in search query with '+' sign
-            term = term.replaceAll(" ","+");
+            term = term.replace(" ","+");
             
                     // get returned article IDs
             const response = await getArticleUIDs(req.query);
@@ -92,10 +92,22 @@ router.get("/search", async (req,res,next) => {
             aUIDs = data.eSearchResult.IdList[0]['Id'].toString()
         }
         else {
+            if (!('articleIds' in req.query) || req.query.articleIds === '') {
+                return res.status(400).send({
+                    message: "Error! Please provide one or more article UIDs.",
+                    data: []
+                });
+            }
+
+            if (!('db' in req.query) || req.query.db === '') {
+                return res.status(400).send({
+                    message: "Error! Please specify a database.",
+                    data: []
+                })
+            }
             aUIDs = req.query.articleIds;
             db = req.query.db
         }
-
         // get metadata about article
         const articleInfo = await getArticleInfo(aUIDs,"","",db);
         let ainfo = null;
@@ -112,8 +124,7 @@ router.get("/search", async (req,res,next) => {
         return res.status(200).json({
             data: rval,
             success: true,
-            message: "",
-            code: res.statusCode
+            message: "Sucessfully obtained article information."
         }); 
     } catch (error) {
         res.status(500);
