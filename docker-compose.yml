@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     image: med_app_backend
     container_name: med_app_backend
-    command: npm start
+    # command: npm start
     volumes:
       - ./server/:/usr/src/app
       - /usr/src/app/node_modules
@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile
     image: med_app_frontend
     container_name: med_app_frontend
-    command: npm start 
+    # command: npm start 
     volumes:
       - ./client/src:/usr/app/src
       - /usr/app/node_modules
