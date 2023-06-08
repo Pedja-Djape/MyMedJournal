@@ -52,11 +52,23 @@ const getArticleInfo = (uidList,retmode,rettype,db) => {
 
 router.get("/search", async (req,res,next) => {
 
+    if (!req.query.hasOwnProperty('db') || req.query.db === '') {
+        return res.status(400).send({
+            message: "Error! Please specify a database.",
+            data: []
+        })
+    }
     try {
         let aUIDs;
         let db;
         if (!req.query.hasOwnProperty("articleIds")) {
             
+            if (req.query.hasOwnProperty('term') || req.query.db === '') {
+                return res.status(400).send({
+                    message: "Error! Please specify a search term.",
+                    data: []
+                });
+            }
             // get query params
             db = req.query.db; 
             let term = req.query.term; 
@@ -91,23 +103,15 @@ router.get("/search", async (req,res,next) => {
             // Array of article IDs
             aUIDs = data.eSearchResult.IdList[0]['Id'].toString()
         }
-        else {
-            if (!('articleIds' in req.query) || req.query.articleIds === '') {
-                return res.status(400).send({
-                    message: "Error! Please provide one or more article UIDs.",
-                    data: []
-                });
-            }
-
-            if (!('db' in req.query) || req.query.db === '') {
-                return res.status(400).send({
-                    message: "Error! Please specify a database.",
-                    data: []
-                })
-            }
-            aUIDs = req.query.articleIds;
-            db = req.query.db
+        if (!('articleIds' in req.query) || req.query.articleIds === '') {
+            return res.status(400).send({
+                message: "Error! Please provide one or more article UIDs.",
+                data: []
+            });
         }
+
+        aUIDs = req.query.articleIds;
+        db = req.query.db
         // get metadata about article
         const articleInfo = await getArticleInfo(aUIDs,"","",db);
         let ainfo = null;
