@@ -33,7 +33,7 @@ router.get('/', authenticateToken, async (req, res) => {
 router.get('/:noteId', authenticateToken , async (req, res) => {
     const uid = req.user.userId;
     if (!noteId) {
-        return res.status(400).send({
+        return res.status(422).send({
             message: "Error! Please specifiy a valid noteId.",
             note: []
         })
@@ -49,7 +49,7 @@ router.get('/:noteId', authenticateToken , async (req, res) => {
                 })
             }
         }
-        return res.status(400).send({
+        return res.status(422).send({
             message: `Note with id ${noteId} does not exist.`
         });
     } catch (error) {
@@ -151,19 +151,19 @@ router.post('/', authenticateToken, async (req, res) => {
         }
     }
     if (!noteTitle) {
-        return res.status(400).send({
+        return res.status(422).send({
             message: "Error! Please provide a valid title.",
             title: noteTitle
         })
     }
     if (!noteContent) { 
-        return res.status(400).send({
+        return res.status(422).send({
             message: "Error! Please provide valid note content.",
             content: noteContent
         })
     }
     if (!noteId) {
-        return res.status(400).send({
+        return res.status(422).send({
             message: "Error! Please provide a valid note id.",
             noteId: noteId
         });
@@ -189,7 +189,7 @@ router.delete('/:noteId', authenticateToken, async (req, res) => {
             });
         }
     }
-    return res.status(400).send({
+    return res.status(422).send({
         message: "Error! Please provide a valid note ID.",
         noteId: ''
     });

@@ -56,17 +56,17 @@ router.post("/signup", async (req, res) => {
         return res.status(200).send({
             message: "User Created Successfully",
             email: result.email,
-            id: result._id.toString(),
             token
         })
     } catch (error) {
         if (error.code === 11000 && "email" in error.keyPattern) {
-            return res.status(400).send({
-                message: "Error creating user. Username already exists.",
-                email: "Username already exists!"
+            return res.status(422).send({
+                errors: {
+                    email: "Email already exists!"
+                }
             })
         }
-        
+
         return res.status(500).send({error});
     }
     
@@ -83,9 +83,7 @@ router.post("/login", async (req, res) => {
     let errors = validateCredentials(enteredEmail, enteredPassword);
     // check for errors
     if (Object.keys(errors).length > 0) {
-        return res.status(422).send({
-            errors
-        });
+        return res.status(422).send({errors});
     }
     try {
         // search for user.
@@ -93,9 +91,7 @@ router.post("/login", async (req, res) => {
         const passwordCheck = await bcrypt.compare(enteredPassword, user.password);
         if (!passwordCheck) {
             errors.password = "Passwords do not match."
-            return res.status(401).send({
-                errors
-            });
+            return res.status(422).send({errors});
         }
         // create JWT token
         const token = jwt.sign(

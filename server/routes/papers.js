@@ -53,7 +53,7 @@ const getArticleInfo = (uidList,retmode,rettype,db) => {
 router.get("/search", async (req,res,next) => {
 
     if (!req.query.hasOwnProperty('db') || req.query.db === '') {
-        return res.status(400).send({
+        return res.status(422).send({
             message: "Error! Please specify a database.",
             data: []
         })
@@ -64,7 +64,7 @@ router.get("/search", async (req,res,next) => {
         if (!req.query.hasOwnProperty("articleIds")) {
 
             if (req.query.hasOwnProperty('term') || req.query.db === '') {
-                return res.status(400).send({
+                return res.status(422).send({
                     message: "Error! Please specify a search term.",
                     data: []
                 });
@@ -75,14 +75,14 @@ router.get("/search", async (req,res,next) => {
             // *** VALIDATE DB ***
             if (!db || db.trim() === "") {
                 const err = new Error("Please provide a valid database to search a query for.");
-                err.status = 400;
+                err.status = 422;
                 return next(err);
             }
 
             // ***VALIDATE TERM***
             if (!term || term.trim() === "") {
                 const err = new Error("Please provide a valid query term to search in a database.");
-                err.status = 400;
+                err.status = 422;
                 return next(err); 
             }
             // replace spaces in search query with '+' sign
@@ -95,7 +95,7 @@ router.get("/search", async (req,res,next) => {
             if (data.eSearchResult.Count == '0') {
                 const ERROR = {
                     message: "Invalid Query. 0 Articles found matching entered query.",
-                    status: 400
+                    status: 422
                 };
                 return next(ERROR);
                 
@@ -104,7 +104,7 @@ router.get("/search", async (req,res,next) => {
             aUIDs = data.eSearchResult.IdList[0]['Id'].toString()
         }
         if (!('articleIds' in req.query) || req.query.articleIds === '') {
-            return res.status(400).send({
+            return res.status(422).send({
                 message: "Error! Please provide one or more article UIDs.",
                 data: []
             });
