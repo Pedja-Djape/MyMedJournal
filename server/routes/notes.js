@@ -34,8 +34,9 @@ router.get('/:noteId', authenticateToken , async (req, res) => {
     const uid = req.user.userId;
     if (!noteId) {
         return res.status(422).send({
-            message: "Error! Please specifiy a valid noteId.",
-            note: []
+            errors: {
+                message: "Error! Please specifiy a valid noteId."
+            }
         })
     }
     const { noteId } = req.params;
@@ -50,7 +51,9 @@ router.get('/:noteId', authenticateToken , async (req, res) => {
             }
         }
         return res.status(422).send({
-            message: `Note with id ${noteId} does not exist.`
+            errors: {
+                message: `Note with id ${noteId} does not exist.`
+            }
         });
     } catch (error) {
         return res.status(500).send({
@@ -81,27 +84,22 @@ router.patch('/:noteId', authenticateToken, async (req, res) => {
             })
         }
     }
+    let errors = {}
+
+
     if (!title) {
-        return res.status(200).send({
-            message: "Error! Please provide a valid title.",
-            title: title
-        })
+        errors.title = "Invalid note title provided."
     }
     if (!content) { 
-        return res.status(200).send({
-            message: "Error! Please provide valid note content.",
-            content: content
-        })
+        errors.content = "Invalid note content provided."
     }
     if (!noteId) {
-        return res.status(200).send({
-            message: "Error! Please provide a valid note id.",
-            noteId: noteId
-        });
+        errors.id = "Invalid note id provided."
     }
+    return res.send(422).send({
+        errors
+    })
     
-
-   
 }) 
 
 // ADD AUTHENTICATIION AND VALIDATION!!!!
@@ -150,24 +148,19 @@ router.post('/', authenticateToken, async (req, res) => {
             })
         }
     }
+    let errors = {}
     if (!noteTitle) {
-        return res.status(422).send({
-            message: "Error! Please provide a valid title.",
-            title: noteTitle
-        })
+        errors.title = `Invalid title provided.`
     }
     if (!noteContent) { 
-        return res.status(422).send({
-            message: "Error! Please provide valid note content.",
-            content: noteContent
-        })
+        errors.noteContent = `Invalid note content provided.`
     }
     if (!noteId) {
-        return res.status(422).send({
-            message: "Error! Please provide a valid note id.",
-            noteId: noteId
-        });
+        errors.id = 'Invalid note ID provided.'
     }
+    return res.status(422).send({
+        errors
+    })
     
     
 })
@@ -190,8 +183,9 @@ router.delete('/:noteId', authenticateToken, async (req, res) => {
         }
     }
     return res.status(422).send({
-        message: "Error! Please provide a valid note ID.",
-        noteId: ''
+        errors: {
+            id: 'Invalid note ID provided.'
+        }
     });
     
     
