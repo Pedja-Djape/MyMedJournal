@@ -28,25 +28,24 @@ const AuthForm = () => {
     const dispatch = useDispatch();
 
     const token =  data?.token;
-    const userId = data?.id;
+    const errors = data && data.errors;
     
     useEffect( () => {
         if (isFirst) {
             isFirst = false;
             return;
         }
-        if ( token !== undefined) {
+        if ( token !== undefined ) {
             const payload = {
                 isAuthenticated: token === null ? false : true,
-                token,
-                id: userId
+                token
             }
             dispatch(authActions.manageToken(payload));
             navigate(`/dashboard`);
             return;
         }
     }
-    , [token, navigate, dispatch, userId]);
+    , [token, navigate, dispatch]);
 
     const {
         value: enteredEmail,
@@ -75,10 +74,12 @@ const AuthForm = () => {
         <>
         <Form method="post" className={classes.form}>
             <h1>{isLogin ? 'Log in' : 'Create an account.'}</h1>
-                {data && data.errors && (
-                    <ul>
+                {errors && (
+                    <ul className='text-red-500'>
                         {Object.values(data.errors).map((err) => (
-                            <li key={err}>{err}</li>
+                            <li key={err}>
+                               <span className='text-red-500'>{err}</span> 
+                            </li>
                         ))}
                     </ul>
                 )}
