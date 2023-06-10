@@ -6,7 +6,6 @@ const authSlice = createSlice({
         isAuthenticated: false,
         token: null,
         email: null,
-        id: null
     },
     reducers: {
         manageToken(state, action) {
