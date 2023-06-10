@@ -35,6 +35,17 @@ const NoteForm = ({method, note}) => {
     const isSubmitting = navigation.state === 'submitting';
     return (
         <div className={classes.container}>
+            {
+                data && data.errors (
+                    <ul className='text-red-500'>
+                        {Object.values(data.errors).map((err) => (
+                            <li key={err}>
+                               <span className='text-red-500'>{err}</span> 
+                            </li>
+                        ))}
+                    </ul>
+                )
+            }
             <Form method={method} className={classes.form}>
                 <p>
                     <label htmlFor='title'>Title</label>
