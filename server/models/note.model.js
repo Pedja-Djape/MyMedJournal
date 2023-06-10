@@ -6,7 +6,7 @@ const noteSchema = new mongoose.Schema({
     title: {
         type: String,
         required: [true, "Each note must have a title"],
-        unique: [true, "Each title must be unique"]
+        unique: false
     },
     content: {
         type: String,
