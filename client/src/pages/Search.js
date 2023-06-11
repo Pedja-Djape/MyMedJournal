@@ -17,10 +17,8 @@ const Search = () => {
 
     const searchHandler = async (enteredValue) => {
         setIsLoading(true);
-        console.log(isLoading)
         getArticleData(enteredValue);
         setIsLoading(false);
-        console.log(isLoading)
     } 
 
     const getArticleData = async (queryTerm) => {
