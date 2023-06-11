@@ -32,6 +32,7 @@ router.get('/', authenticateToken, async (req, res) => {
 
 router.get('/:noteId', authenticateToken , async (req, res) => {
     const uid = req.user.userId;
+    const { noteId } = req.params;
     if (!noteId) {
         return res.status(422).send({
             errors: {
@@ -39,7 +40,7 @@ router.get('/:noteId', authenticateToken , async (req, res) => {
             }
         })
     }
-    const { noteId } = req.params;
+    
     try {
         const userNotes = await getUserNotes(uid);
         for (const note of userNotes.notes) {
