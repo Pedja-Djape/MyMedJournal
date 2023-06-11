@@ -14,16 +14,35 @@ const NoteItem = ({note}) => {
     }
     
     return (
-        <article className={classes.note}>
-            <h1>{note.title}</h1>
-            <div className={classes.description}> 
-                <p>{note.content}</p>
-            </div>
-            <menu className={classes.actions}>
-                <Link to='edit'>Edit</Link>
-                <button onClick={deleteHandler}>Delete</button>
-            </menu>
-        </article>
+        <>
+            {
+                note && note.errors && (
+                    <ul className='text-red-500'>
+                        {Object.values(note.errors).map(err => (
+                            <li key={err}>
+                                {err}
+                            </li>
+                        ))}
+                    </ul>
+                )
+            }
+            {
+                note && !note.errors && (
+                    <article className={classes.note}>
+                        <h1>{note.title}</h1>
+                        <div className={classes.description}> 
+                            <p>{note.content}</p>
+                        </div>
+                        <menu className={classes.actions}>
+                            <Link to='edit'>Edit</Link>
+                            <button onClick={deleteHandler}>Delete</button>
+                        </menu>
+                    </article>
+                )
+            }
+            
+        </>
+        
     )
 }
 
