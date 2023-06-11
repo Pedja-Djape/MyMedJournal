@@ -26,6 +26,13 @@ const errorHandler = (error, req, res, next) => {
     })
 }
 
+const isValidQueryParam = p => {
+    if (!p || p && p.trim() === "") {
+        return false
+    }
+    return true;
+}
+
 // Function to obtain article UIDs, based on database and query term
 const getArticleUIDs = (query) => {
     const options = apiHelper.genOptionsObject(
@@ -48,72 +55,66 @@ const getArticleInfo = (uidList,retmode,rettype,db) => {
     return apiHelper.genApiRequestPromise(options);
 }
 
-
-
-router.get("/search", async (req,res,next) => {
-
-    if (!req.query.hasOwnProperty('db') || req.query.db === '') {
-        return res.status(422).send({
-            message: "Error! Please specify a database.",
-            data: []
-        })
+async function searchArticles({query}) {
+    // get search query params
+    const db = query.db;
+    let term = query.term;
+    const articleIds = query.articleIds;
+    // need valid db
+    if (!isValidQueryParam(db)) {
+        return {
+            status: 422,
+            data: {
+                errors: {
+                    db: "Error! Please specify a valid database.",
+                }
+            }
+        }
     }
+    // if articleIDs not specified and invalid search term
+    if (!isValidQueryParam(articleIds) && !isValidQueryParam(term)) {
+        return {
+            status: 422,
+            data: {
+                errors: {
+                    term: "Error! Please specify a valid search term.",
+                }
+            }
+        }
+    }
+    let searchTerm;
     try {
-        let aUIDs;
-        let db;
-        if (!req.query.hasOwnProperty("articleIds")) {
-
-            if (req.query.hasOwnProperty('term') || req.query.db === '') {
-                return res.status(422).send({
-                    message: "Error! Please specify a search term.",
-                    data: []
-                });
-            }
-            // get query params
-            db = req.query.db; 
-            let term = req.query.term; 
-            // *** VALIDATE DB ***
-            if (!db || db.trim() === "") {
-                const err = new Error("Please provide a valid database to search a query for.");
-                err.status = 422;
-                return next(err);
-            }
-
-            // ***VALIDATE TERM***
-            if (!term || term.trim() === "") {
-                const err = new Error("Please provide a valid query term to search in a database.");
-                err.status = 422;
-                return next(err); 
-            }
+        let aUIDs = null;
+        // if articleIds not specified
+        if (!isValidQueryParam(articleIds)) {
             // replace spaces in search query with '+' sign
-            term = term.replace(" ","+");
+            searchTerm = term.replace(" ","+");
+
+            // get returned article IDs
+            query.term = searchTerm;
+            const response = await getArticleUIDs(query);
             
-                    // get returned article IDs
-            const response = await getArticleUIDs(req.query);
             let data = null;
             parser.parseString(response, (e,d) => data = d);
             if (data.eSearchResult.Count == '0') {
-                const ERROR = {
-                    message: "Invalid Query. 0 Articles found matching entered query.",
-                    status: 422
-                };
-                return next(ERROR);
-                
+                return {
+                    status: 422,
+                    data: {
+                        errors: {
+                            term: "Invalid search term. Found no articles relating to query"
+                        }
+                    }
+                }
             }
             // Array of article IDs
             aUIDs = data.eSearchResult.IdList[0]['Id'].toString()
-        }
-        if (!('articleIds' in req.query) || req.query.articleIds === '') {
-            return res.status(422).send({
-                message: "Error! Please provide one or more article UIDs.",
-                data: []
-            });
+        } else {
+            aUIDs = articleIds;
         }
 
-        aUIDs = req.query.articleIds;
-        db = req.query.db
         // get metadata about article
         const articleInfo = await getArticleInfo(aUIDs,"","",db);
+        
         let ainfo = null;
         parser.parseString(articleInfo, (e,d) => ainfo = d);
         const rval = [];
@@ -125,26 +126,53 @@ router.get("/search", async (req,res,next) => {
             }
             
         }
-        return res.status(200).json({
-            data: rval,
-            success: true,
-            message: "Sucessfully obtained article information."
-        }); 
+        return {
+            status: 200,
+            data: {
+                data: rval,
+                success: true,
+                message: "Sucessfully obtained article information."
+            }
+        }
     } catch (error) {
-        res.status(500);
-        return next(error);
-    }
+        return {
+            status: 500,
+            data: {
+                errors: {
+                    server: "Unable to fetch articles."
+                }
+            }
+        }
+     }
+}
+
+router.get("/search", async (req, res) => {
+    
+    const response = await searchArticles({query: req.query});
+    return res.status(response.status).send(response.data);
 });
 
-router.get('/', authenticateToken, async (req, res, next) => {
+router.get('/', authenticateToken, async (req, res) => {
     const uid = req.user.userId;
     try {
-        const userFavorites = await Articles.findOne({_id: uid}).exec();
-        return res.status(200).send({
-            message: "Successfully obtained user's favorite articles.",
-            favorites: userFavorites.articles
+        const favIds = await Articles.findOne({_id: uid}).exec();
+        
+        if (favIds.articles.length === 0) {
+            return res.status(200).send({
+                message: "Successfully obtained user's favorite articles.",
+                data: [],
+            });
+        }
+        const userFavorites = await searchArticles({
+            query: {
+                db: 'pubmed',
+                term: null,
+                articleIds: favIds.articles.toString()
+            }
         });
+        return res.status(userFavorites.status).send(userFavorites.data);
     } catch (error) {
+        console.log(error)
         return res.status(500).send({
             message: "Failed to obtain favorite articles.",
             error
@@ -155,13 +183,15 @@ router.get('/', authenticateToken, async (req, res, next) => {
 
 router.put('/', authenticateToken, async (req, res) => {
     const uid = req.user.userId;
-    if (req.body.hasOwnProperty('articleId') || req.body.articleId === null || req.body.articleId === undefined || req.body.articleId === '') {
-        return res.status(200).send({
-            message: "Error! Please provide a valid article ID.",
-            articleId: ''
+    const aid = req.body.articleId;
+
+    if (!isValidQueryParam(aid)) {
+        return res.status(422).send({
+            errors: {
+                articleId: "Error! Please provide a valid article ID."
+            }
         });
     }
-    const aid = req.body.articleId;
     
     try {
         await Articles.updateOne(
@@ -183,13 +213,15 @@ router.put('/', authenticateToken, async (req, res) => {
 
 router.delete('/', authenticateToken, async (req,res) => {
     const uid = req.user.userId;
-    if (req.body.hasOwnProperty('articleId') || req.body.articleId === null || req.body.articleId === undefined || req.body.articleId === '') {
-        return res.status(200).send({
-            message: "Error! Please provide a valid article ID.",
-            articleId: ''
+    const aid = req.body.articleId;
+    if (!aid || (aid && aid.trim() === "")) {
+        return res.status(422).send({
+            errors: {
+                articleId: "Error! Please provide a valid article ID."
+            }
         });
     }
-    const aid = req.body.articleId;
+
     try {
         await Articles.updateOne(
             { _id: uid },
