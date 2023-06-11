@@ -6,37 +6,19 @@ import store from '../store';
 // Suspense allows us to delay the rendering of the page until we have the events
 
 const NotesPage = () => {
-    // const { notes } = useLoaderData();
-    const data = useLoaderData();
+
+    const {notes} = useLoaderData();
     return (
-        <>
-            {
-                data && data.errors (
-                    <ul className='text-red-500'>
-                        {Object.values(data.errors).map(err => (
-                            <li key={err}>
-                                {err}
-                            </li>
-                        ))}
-				</ul>
-                )
-            }
-            {
-                data && data.notes (
-                    <Suspense fallback={<p style={{textAlign: 'center'}}>Loading ...</p>}>
-                    <Await resolve={data}>
-                        {(loadedData) => 
-                            <div className="text-center">
-                                <NotesList notes={loadedData.notes} />
-                            </div>
-                        }
-                    </Await>
-                
-            </Suspense>
-                )
-            }
-            
-        </>
+        
+        <Suspense fallback={<p style={{textAlign: 'center'}}>Loading ...</p>}>
+            <Await resolve={notes}>
+                {(loadedData) => 
+                    <div className="text-center">
+                        <NotesList notes={loadedData.notes} />
+                    </div>
+                }
+            </Await>
+        </Suspense>
             
     )
 }
