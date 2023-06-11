@@ -4,8 +4,8 @@ import Modal from './UI/Modal';
 import ArticlePopup from "../components/ArticlePopup/ArticlePopup";
 import { Link } from 'react-router-dom';
 
-const FavoritesList = ({favs}) => {
-    console.log(favs)
+const FavoritesList = ({data}) => {
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [cardInfo, setCardInfo] = useState({});
 
@@ -22,7 +22,7 @@ const FavoritesList = ({favs}) => {
             })
             setIsModalOpen(true);
     }
-
+    const favs = data.data
     return (
         <>
         {
@@ -36,11 +36,31 @@ const FavoritesList = ({favs}) => {
                     />
                 </Modal> :
             null
-            }
+        }
         <div className='flex flex-col items-center justify-center w-full'>
             <h1>Your favorite articles</h1>
+            {
+                data && data.errors && (
+                    <ul className=" text-center text-red-600">
+                        {Object.values(data.errors).map(err => (
+                            <li key={err}>{err}</li>
+                        )
+                        )}
+                    </ul>
+                )
+            }
+            {
+                favs && favs.length === 0 && (
+                    <p className='pt-12 text-3xl text-white'>
+                        Seems like you don't have any favorites right now. 
+                        Head on to the <Link to='/search' className='underline text-[#f2c11d]'>search tool</Link> and
+                        start reading!
+                    </p>
+                )
+            }
+            
             <div className='flex justify-center flex-wrap gap-2'>
-                { favs && favs.map(fav => (
+                { favs  && favs.length > 0 && favs.map(fav => (
                     <div  key={fav.id} className='p-6'>
                         <Card 
                             title={fav.title}
@@ -53,15 +73,7 @@ const FavoritesList = ({favs}) => {
                     
                     ))
                 }
-                {
-                    favs && favs.length === 0 && (
-                        <p className='pt-12 text-3xl text-white'>
-                            Seems like you don't have any favorites right now. 
-                            Head on to the <Link to='/search' className='underline text-[#f2c11d]'>search tool</Link> and
-                            start reading!
-                        </p>
-                    )
-                }
+                
             </div>
         </div>
         
