@@ -1,22 +1,42 @@
 import {Suspense} from 'react'
-import { Await, defer, useLoaderData } from 'react-router-dom';
+import { Await, defer, json, useLoaderData } from 'react-router-dom';
 import NotesList from "../components/NotesList";
 import store from '../store';
 
 // Suspense allows us to delay the rendering of the page until we have the events
 
 const NotesPage = () => {
-    const { notes } = useLoaderData();
+    // const { notes } = useLoaderData();
+    const data = useLoaderData();
     return (
-        <Suspense fallback={<p style={{textAlign: 'center'}}>Loading ...</p>}>
-            <Await resolve={notes}>
-                {(loadedNotes) => <div className="text-center">
-                <NotesList notes={loadedNotes.notes} />
-            </div>}
-            </Await>
+        <>
+            {
+                data && data.errors (
+                    <ul className='text-red-500'>
+                        {Object.values(data.errors).map(err => (
+                            <li key={err}>
+                                {err}
+                            </li>
+                        ))}
+				</ul>
+                )
+            }
+            {
+                data && data.notes (
+                    <Suspense fallback={<p style={{textAlign: 'center'}}>Loading ...</p>}>
+                    <Await resolve={data}>
+                        {(loadedData) => 
+                            <div className="text-center">
+                                <NotesList notes={loadedData.notes} />
+                            </div>
+                        }
+                    </Await>
+                
+            </Suspense>
+                )
+            }
             
-        </Suspense>
-        
+        </>
             
     )
 }
@@ -28,6 +48,12 @@ const loadNotes = async () => {
             "Authorization": "Bearer " + token
         }
     });
+    if (response.status === 422) {
+        return response;
+    }
+    if (!response.ok) {
+        throw json(response);
+    }
     const data = await response.json();
     return data;
 }
