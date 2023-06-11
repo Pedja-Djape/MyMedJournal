@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, useNavigate, useSubmit } from 'react-router-dom'
+import { Link, useSubmit } from 'react-router-dom'
 
 import classes from './NoteItem.module.css';
 
@@ -12,7 +12,7 @@ const NoteItem = ({note}) => {
             return;
         }
     }
-    console.log(note);
+    
     return (
         <article className={classes.note}>
             <h1>{note.title}</h1>
