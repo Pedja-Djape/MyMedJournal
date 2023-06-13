@@ -10,6 +10,6 @@ RUN npm install --silent
 
 COPY . . 
 
-EXPOSE 9000
+EXPOSE 8080
 
 CMD ["nodemon"]
