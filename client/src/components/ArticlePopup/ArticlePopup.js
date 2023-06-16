@@ -7,7 +7,7 @@ const ArticlePopup = (props) => {
     return (<>
         <div className={classes.card} >
             <div className={classes['card-header']}>
-                <a href={`https://pubmed.ncbi.nlm.nih.gov/${props.id}/`} target="_blank">{props.title}</a>
+                <a href={`https://pubmed.ncbi.nlm.nih.gov/${props.id}/`} target="_blank" rel="noopener noreferrer">{props.title}</a>
             </div>
             <div className={classes.abstractTitle}>Abstract</div>
             <div className={classes['card-body']}>

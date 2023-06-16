@@ -1,5 +1,4 @@
-
-import { useEffect, useRef } from "react";import ReactDom from 'react-dom';
+import ReactDom from 'react-dom';
 import classes from './Modal.module.css';
 
 

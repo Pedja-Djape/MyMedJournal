@@ -20,16 +20,12 @@ const NoteForm = ({method, note}) => {
     }, []);
 
     const {
-        value: enteredTitle,
         hasError: titleHasError,
-        isValid: titleIsValid,
         valueChangeHandler: titleChangedHandler,
     } = useInput((title) => title.trim() === '');
 
     const {
-        value: enteredContent,
         hasError: contentHasError,
-        isValid: contentIsValid,
     } = useInput((content) => content.trim() === '');
 
 
