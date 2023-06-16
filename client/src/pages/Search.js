@@ -1,44 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchTools/SearchBar";
 import classes from './Search.module.css';
 import Card from "../components/UI/Card";
 import Modal from "../components/UI/Modal";
 import ArticlePopup from "../components/ArticlePopup/ArticlePopup";
 import getBackendHostname from "../util/host";
+import { json } from "react-router-dom";
 
+const ARTICLES_PER_PAGE = 6;
 
 const Search = () => {
     const [articlesData, setArticlesData] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [cardInfo, setCardInfo] = useState({});
-    const [retStart, setRetStart] = useState(0);
+    const [searchTerm, setSearchTerm] = useState(null);
+    const [pagesInfo, setPagesInfo] = useState({
+        currentPage: 0,
+        furthestPage: -1
+    });
 
     const [isLoading, setIsLoading] = useState(false)
 
-
-    const searchHandler = async (enteredValue) => {
-        setIsLoading(true);
-        getArticleData(enteredValue);
-        setIsLoading(false);
-    } 
-
-    const getArticleData = async (queryTerm) => {
-        if (!queryTerm || queryTerm.trim().length === 0) {
-            return;
+    useEffect( () => {
+        async function getArticles() {
+            if (!searchTerm || searchTerm.trim().length === 0) {
+                return;
+            }
+            const response = await searchForArticles(searchTerm, 0, ARTICLES_PER_PAGE * 3);
+            if (!response.ok) {
+                throw json(response);
+            }
+            const data = await response.json();
+            setArticlesData(data.data);
+            setPagesInfo((pagesInfo) => ({
+                ...pagesInfo,
+                furthestPage: 2
+            }))
         }
-        const path = getBackendHostname() + "/papers/search?" + new URLSearchParams({
-            db: "pubmed",
-            term: queryTerm,
-            retstart: retStart,
-            retmax: 100
-        });
-        const response = await fetch(path);
-        if (!response.ok) {
-            console.log("ERROR FETCHING DATA");
-        }
-        const data = await response.json();
-        setArticlesData(data.data);
-    }
+        getArticles();
+
+    }, [searchTerm]);
 
     const cardClickHandler = (title,abstract,id) => {
         setCardInfo({
@@ -49,8 +50,37 @@ const Search = () => {
         setIsModalOpen(true);
     }
 
+    const paginationHandler = async (direction) => {
+        if (direction === "next") {
+            if (pagesInfo.currentPage >= pagesInfo.furthestPage && pagesInfo.furthestPage !== -1) {
+                const res = await searchForArticles(
+                    searchTerm, 
+                    pagesInfo.currentPage * ARTICLES_PER_PAGE,
+                    2 * ARTICLES_PER_PAGE
+                );
+                const data = await res.json()
+                setArticlesData(oldData => [...oldData, ...data.data])
+                setPagesInfo(
+                    pagesInfo => ({
+                        currentPage: pagesInfo.currentPage + 1,
+                        furthestPage: pagesInfo.furthestPage + 2
+                    })
+                )
+                return;
+            }
+            setPagesInfo(pagesInfo => ({
+                ...pagesInfo,
+                currentPage: pagesInfo.currentPage + 1
+            }))
+        }
+        if (direction === "back") {
+            setPagesInfo(pagesInfo => ({
+                ...pagesInfo,
+                currentPage: pagesInfo.currentPage - 1
+            }))
+        }
+    }
 
-   
 
     return (
         <div className={classes.container}>
@@ -73,7 +103,7 @@ const Search = () => {
             <div className={classes['flex-container']}>
                 <div className={classes['search-bar']}>
 
-                    <SearchBar onSetQuery={searchHandler} />
+                    <SearchBar onSetQuery={(t) => setSearchTerm(t)} />
                 </div>
             </div>
             <div className={classes['cards-container']}>
@@ -84,19 +114,22 @@ const Search = () => {
                 }
                 {
                     !isLoading && articlesData && articlesData.length > 0 ?
-                        articlesData.slice(retStart, retStart + 6).map( (article) => 
-                            <div key={article.id} className={classes.card}>
-                                <Card 
-                                    title={article.title}
-                                    body={article.abstract}
-                                    id={article.id}
-                                    onCardClick={cardClickHandler}
-                                    buttonInfo={{
-                                        method: "PUT",
-                                        title: "Add to favorites."
-                                    }}
-                                />
-                            </div>
+                        articlesData.slice(
+                            pagesInfo.currentPage * ARTICLES_PER_PAGE, 
+                            (pagesInfo.currentPage * ARTICLES_PER_PAGE) + 6
+                        ).map( (article) => 
+                                <div key={article.id} className={classes.card}>
+                                    <Card 
+                                        title={article.title}
+                                        body={article.abstract}
+                                        id={article.id}
+                                        onCardClick={cardClickHandler}
+                                        buttonInfo={{
+                                            method: "PUT",
+                                            title: "Add to favorites."
+                                        }}
+                                    />
+                                </div>
                         ) :
                         null
                 }
@@ -105,19 +138,15 @@ const Search = () => {
                 articlesData && (
                     <div className="flex justify-center gap 1rem">
                         {
-                            retStart > 0 && (
-                                <button onClick={() => {
-                                    setRetStart(value => value - 6) 
-                                }}
+                            pagesInfo.currentPage > 0 && (
+                                <button onClick={() => paginationHandler("back")}
                                 className="p-4 m-2 color white bg-[#f6c666] rounded-[4px] w-[100px]"    
                             >
                                     Back.
                                 </button>
                             )
                         }
-                    <button onClick={() => {
-                            setRetStart(value => value + 6) 
-                        }} 
+                    <button onClick={() => paginationHandler("next")} 
                         className="p-4 m-2 color white bg-[#f6c666] rounded-[4px] ">
                             Next page.
                     </button>
@@ -132,5 +161,15 @@ const Search = () => {
     
     );
 };
+
+const searchForArticles = async (term, startIndex, numArticles) => {
+    return await fetch(getBackendHostname() + "/papers/search?" + new URLSearchParams({
+        db: "pubmed",
+        term,
+        retstart: startIndex,
+        retmax: numArticles
+    }));
+}
+
   
 export default Search;
