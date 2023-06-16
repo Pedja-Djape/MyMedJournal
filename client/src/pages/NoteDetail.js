@@ -3,6 +3,7 @@ import NoteItem from '../components/NoteItem';
 import { Await, defer, json, useRouteLoaderData } from 'react-router-dom';
 
 import store from '../store';
+import getBackendHostname from '../util/host';
 
 const NoteDetail = () => {
 	const { note } = useRouteLoaderData('note-detail');
@@ -20,7 +21,7 @@ const NoteDetail = () => {
 
 const loadNote = async (noteId) => {
 	const token = store.getState().auth.token;
-	const response = await fetch(`http://localhost:9000/notes/${noteId}`, {
+	const response = await fetch(`${getBackendHostname()}/notes/${noteId}`, {
 		headers: {
 			'Authorization': 'Bearer ' + token
 		}

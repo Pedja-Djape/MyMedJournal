@@ -3,6 +3,7 @@ import { Await, defer, json, useLoaderData } from 'react-router-dom';
 import FavoritesList from "../components/FavoritesList";
 
 import store from '../store';
+import getBackendHostname from "../util/host";
 
 
 const Favorites = () => {
@@ -22,7 +23,7 @@ const Favorites = () => {
 
 const loadFavs = async () => {
     const token = store.getState().auth.token;
-    const response = await fetch('http://localhost:9000/papers/', {
+    const response = await fetch(getBackendHostname() + '/papers/', {
         headers: {
             "Authorization": "Bearer " + token
         }

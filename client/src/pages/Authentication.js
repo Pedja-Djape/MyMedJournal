@@ -1,6 +1,7 @@
 import { json } from 'react-router-dom'
 
 import AuthForm from "../components/AuthForm";
+import getBackendHostname from '../util/host';
 
 const AuthenticationPage = () => {
 
@@ -22,7 +23,7 @@ export const action = async ({request}) => {
     };
 
     // tell backend to create request
-    const response = await fetch('http://localhost:9000/auth/' + mode, {
+    const response = await fetch(getBackendHostname() + "/auth/" + mode, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

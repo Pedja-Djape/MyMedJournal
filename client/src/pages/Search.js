@@ -4,6 +4,7 @@ import classes from './Search.module.css';
 import Card from "../components/UI/Card";
 import Modal from "../components/UI/Modal";
 import ArticlePopup from "../components/ArticlePopup/ArticlePopup";
+import getBackendHostname from "../util/host";
 
 
 const Search = () => {
@@ -25,7 +26,7 @@ const Search = () => {
         if (!queryTerm || queryTerm.trim().length === 0) {
             return;
         }
-        const path = "http://localhost:9000/papers/search?" + new URLSearchParams({
+        const path = getBackendHostname() + "/papers/search?" + new URLSearchParams({
             db: "pubmed",
             term: queryTerm,
             retstart: retStart,
