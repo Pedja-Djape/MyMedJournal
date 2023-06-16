@@ -6,6 +6,7 @@ import Modal from "../components/UI/Modal";
 import ArticlePopup from "../components/ArticlePopup/ArticlePopup";
 import getBackendHostname from "../util/host";
 import { json } from "react-router-dom";
+import { Dna } from 'react-loader-spinner';
 
 const ARTICLES_PER_PAGE = 6;
 
@@ -22,22 +23,26 @@ const Search = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect( () => {
-        async function getArticles() {
-            if (!searchTerm || searchTerm.trim().length === 0) {
-                return;
-            }
-            const response = await searchForArticles(searchTerm, 0, ARTICLES_PER_PAGE * 3);
-            if (!response.ok) {
-                throw json(response);
-            }
-            const data = await response.json();
-            setArticlesData(data.data);
-            setPagesInfo((pagesInfo) => ({
-                ...pagesInfo,
-                furthestPage: 2
-            }))
+        if (!searchTerm || searchTerm.trim().length === 0) {
+            return;
         }
-        getArticles();
+
+        // const response = await searchForArticles(searchTerm, 0, ARTICLES_PER_PAGE * 3);
+        setIsLoading(true)
+        searchForArticles(searchTerm, 0, ARTICLES_PER_PAGE * 3)
+        .then(res => res.json())
+        .then(data => {
+            setArticlesData(data.data);
+        })
+        .catch(error => {throw json(error)})
+        .finally(() => {
+            setIsLoading(false);
+        })
+        setPagesInfo((pagesInfo) => ({
+            ...pagesInfo,
+            furthestPage: 2
+        }))
+        
 
     }, [searchTerm]);
 
@@ -102,15 +107,19 @@ const Search = () => {
 
             <div className={classes['flex-container']}>
                 <div className={classes['search-bar']}>
-
                     <SearchBar onSetQuery={(t) => setSearchTerm(t)} />
                 </div>
             </div>
             <div className={classes['cards-container']}>
                 {
-                    isLoading && (
-                       <h1 className="text-center text-white">Loading ...</h1>
-                    )
+                    isLoading && <Dna
+                        visible={true}
+                        height="100"
+                        width="100"
+                        ariaLabel="dna-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="dna-wrapper"
+                    />
                 }
                 {
                     !isLoading && articlesData && articlesData.length > 0 ?
