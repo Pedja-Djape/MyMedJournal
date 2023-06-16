@@ -10,10 +10,15 @@ const ErrorPage = () => {
     if (error.status === 500) {
         message = error.data.message;
     }
-    if (error.status === 404) {
+    else if (error.status === 404) {
         title = 'Not found!';
         message = 'Could not find resource or page!';
     }
+    else if (error.status === 403) {
+        title = "Forbidden!"
+        message = "You are trying to access a resource without authorization! Please login to continue"
+    }
+
     return (
         <>
         <MainNavigation />
