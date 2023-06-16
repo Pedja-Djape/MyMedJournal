@@ -7,7 +7,7 @@ const Protected = ({children}) => {
     const authState = useSelector(state => state.auth);
     useEffect( () => {
         if (!authState.isAuthenticated) {
-            navigate("/auth");
+            navigate("/auth?mode=login");
         } 
     });
     return children
