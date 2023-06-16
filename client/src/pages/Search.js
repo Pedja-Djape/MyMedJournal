@@ -58,19 +58,26 @@ const Search = () => {
     const paginationHandler = async (direction) => {
         if (direction === "next") {
             if (pagesInfo.currentPage >= pagesInfo.furthestPage && pagesInfo.furthestPage !== -1) {
-                const res = await searchForArticles(
-                    searchTerm, 
-                    pagesInfo.currentPage * ARTICLES_PER_PAGE,
-                    2 * ARTICLES_PER_PAGE
-                );
-                const data = await res.json()
-                setArticlesData(oldData => [...oldData, ...data.data])
-                setPagesInfo(
-                    pagesInfo => ({
-                        currentPage: pagesInfo.currentPage + 1,
-                        furthestPage: pagesInfo.furthestPage + 2
-                    })
-                )
+                setIsLoading(true)
+                try {
+                    const res = await searchForArticles(
+                        searchTerm, 
+                        pagesInfo.currentPage * ARTICLES_PER_PAGE,
+                        2 * ARTICLES_PER_PAGE
+                    );
+                    const data = await res.json()
+                    setArticlesData(oldData => [...oldData, ...data.data])
+                    setPagesInfo(
+                        pagesInfo => ({
+                            currentPage: pagesInfo.currentPage + 1,
+                            furthestPage: pagesInfo.furthestPage + 2
+                        })
+                    )
+                } catch (error) {
+
+                } finally {
+                    setIsLoading(false)
+                }
                 return;
             }
             setPagesInfo(pagesInfo => ({
