@@ -1,9 +1,10 @@
 import { Form, useNavigate, useNavigation, json, redirect , useActionData} from 'react-router-dom';
+import { useEffect } from 'react';
 import useInput from '../hooks/useInput';
 import store from '../store'
+import getBackendHostname from '../util/host';
  
 import classes from './NoteForm.module.css'
-import { useEffect } from 'react';
 
 const NoteForm = ({method, note}) => {
     const navigate = useNavigate();
@@ -91,10 +92,10 @@ export const action = async ({request, params}) => {
         content: data.get('content')
     }
 
-    let url = `http://localhost:9000/notes/`
+    let url = `${getBackendHostname()}/notes/`
 
     if (method === "PATCH" || method === "DELETE") {
-        url = `http://localhost:9000/notes/${params.noteId}`
+        url = `${getBackendHostname()}/notes/${params.noteId}`
     }
     
 
@@ -109,6 +110,9 @@ export const action = async ({request, params}) => {
     });
     if (response.status === 422) {
         return response
+    }
+    if (response.status === 403) {
+        redirect('/auth?mode=login')
     }
     if (!response.ok) {
         throw json({message: 'Could not save note'}, {status: 500});

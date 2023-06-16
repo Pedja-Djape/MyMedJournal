@@ -3,6 +3,8 @@ import classes from "./Card.module.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+import getBackendHostname from "../../util/host";
+
 
 
 const Card = (props) => {
@@ -15,7 +17,7 @@ const Card = (props) => {
     }
 
     const favHandler = () => {
-        fetch("http://localhost:9000/papers", {
+        fetch(getBackendHostname(), {
             method: buttonInfo.method,
             headers: {
                 "Authorization": "Bearer " + authState.token,
