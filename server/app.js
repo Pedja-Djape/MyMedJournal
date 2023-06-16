@@ -25,7 +25,7 @@ app.use(limiter)
 dbConnect();
 
 var corsOptions = {
-  origin: ["https://medappfrontend.web.app"], // allow from this origin
+  origin: ["https://medappfrontend.web.app", "http://localhost:3000"], // allow from this origin
 }
 
 app.use(cors(corsOptions));
