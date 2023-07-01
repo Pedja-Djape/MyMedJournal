@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import useInput from '../hooks/useInput';
 import { store }  from '../store'
 import getBackendHostname from '../util/host';
+import { waitForRehydration } from '../store/util';
  
 import classes from './NoteForm.module.css'
 
@@ -94,8 +95,8 @@ export const action = async ({request, params}) => {
         url = `${getBackendHostname()}/notes/${params.noteId}`
     }
     
-
-    const token = store.getState().auth.token;
+    await waitForRehydration()
+    const token = store.getState().token;
     const response = await fetch(url,{
         method: method,
         headers: {

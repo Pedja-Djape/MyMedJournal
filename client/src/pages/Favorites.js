@@ -4,6 +4,7 @@ import FavoritesList from "../components/FavoritesList";
 
 import { store }  from '../store';
 import getBackendHostname from "../util/host";
+import { waitForRehydration } from '../store/util';
 
 
 const Favorites = () => {
@@ -22,7 +23,8 @@ const Favorites = () => {
 
 
 const loadFavs = async () => {
-    const token = store.getState().auth.token;
+    await waitForRehydration();
+    const token = store.getState().token;
     const response = await fetch(getBackendHostname() + '/papers/', {
         headers: {
             "Authorization": "Bearer " + token
