@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Await, defer, json, useLoaderData } from 'react-router-dom';
 import FavoritesList from "../components/FavoritesList";
 
-import store from '../store';
+import { store }  from '../store';
 import getBackendHostname from "../util/host";
 
 

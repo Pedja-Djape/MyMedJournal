@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import NoteItem from '../components/NoteItem';
 import { Await, defer, json, useRouteLoaderData } from 'react-router-dom';
 
-import store from '../store';
+import { store }  from '../store';
 import getBackendHostname from '../util/host';
 
 const NoteDetail = () => {
