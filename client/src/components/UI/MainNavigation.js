@@ -10,7 +10,7 @@ const MainNavigation = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const isAuthenticated = useSelector(state => state.isAuthenticated);
 
     const logoutHandler = () => {
         dispatch(authActions.manageToken({

@@ -5,7 +5,7 @@ import DashboardNavigation from "../components/DashboardNavigation";
 import { useSelector } from "react-redux";
 
 const DashboardLayout = () => {
-    const isAuthenticated = useSelector(state => state.auth.isAuthenticated);
+    const isAuthenticated = useSelector(state => state.isAuthenticated);
     return (
     <>
     <Suspense>

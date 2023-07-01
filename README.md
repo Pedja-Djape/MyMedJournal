@@ -1,5 +1,7 @@
 # MyMedJournal
 
+Go check it out [here](https://medappfrontend.web.app/)!
+
 ## Description
 
 ### Overview
@@ -36,9 +38,7 @@ MyMedJournal is a web-app I created to help me manage the medical/bio-related re
 
 ## Usage
 
-I'm currently working on productionizing this application and it will be available for anyone to use.
-
-<b>However</b>, those interested can still run MyMedJournal locally -- see below.
+[The website](https://medappfrontend.web.app/) is now up and running! If you want to run this locally, see the steps below.
 
 ### Requirements
 * Node.js: >=14.20.0

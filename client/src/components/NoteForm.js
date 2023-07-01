@@ -1,8 +1,8 @@
 import { Form, useNavigate, useNavigation, json, redirect , useActionData} from 'react-router-dom';
 import { useEffect } from 'react';
 import useInput from '../hooks/useInput';
-import store from '../store'
 import getBackendHostname from '../util/host';
+import { getRehydratedState } from '../store/util';
  
 import classes from './NoteForm.module.css'
 
@@ -94,8 +94,8 @@ export const action = async ({request, params}) => {
         url = `${getBackendHostname()}/notes/${params.noteId}`
     }
     
-
-    const token = store.getState().auth.token;
+    const currentState = await getRehydratedState();
+    const token = currentState.token;
     const response = await fetch(url,{
         method: method,
         headers: {
