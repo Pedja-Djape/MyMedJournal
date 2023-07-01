@@ -8,7 +8,7 @@ import getBackendHostname from "../../util/host";
 
 const Card = (props) => {
     const { buttonInfo } = props;
-    const authState = useSelector(state => state.auth);   
+    const authState = useSelector(state => state);   
     const navigate = useNavigate(); 
     const handleCardClick = () => {
         props.onCardClick(props.title,props.body,props.id);
