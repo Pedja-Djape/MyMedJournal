@@ -2,9 +2,8 @@ import { Suspense } from "react";
 import { Await, defer, json, useLoaderData } from 'react-router-dom';
 import FavoritesList from "../components/FavoritesList";
 
-import { store }  from '../store';
 import getBackendHostname from "../util/host";
-import { waitForRehydration } from '../store/util';
+import { getRehydratedState } from '../store/util';
 
 
 const Favorites = () => {
@@ -23,8 +22,8 @@ const Favorites = () => {
 
 
 const loadFavs = async () => {
-    await waitForRehydration();
-    const token = store.getState().token;
+    const currentState = await getRehydratedState();
+    const token = currentState.token;
     const response = await fetch(getBackendHostname() + '/papers/', {
         headers: {
             "Authorization": "Bearer " + token

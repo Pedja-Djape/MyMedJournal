@@ -2,9 +2,8 @@ import React, { Suspense } from 'react'
 import NoteItem from '../components/NoteItem';
 import { Await, defer, json, useRouteLoaderData } from 'react-router-dom';
 
-import { store }  from '../store';
 import getBackendHostname from '../util/host';
-import { waitForRehydration } from '../store/util';
+import { getRehydratedState } from '../store/util';
 
 const NoteDetail = () => {
 	const { note } = useRouteLoaderData('note-detail');
@@ -21,8 +20,8 @@ const NoteDetail = () => {
 }
 
 const loadNote = async (noteId) => {
-	await waitForRehydration()
-	const token = store.getState().token;
+	const currentState = await getRehydratedState()
+	const token = currentState.token;
 	const response = await fetch(`${getBackendHostname()}/notes/${noteId}`, {
 		headers: {
 			'Authorization': 'Bearer ' + token

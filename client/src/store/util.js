@@ -1,15 +1,9 @@
-import { store } from ".";
+import getStoredState from "redux-persist/es/getStoredState";
+import { CONFIG } from "./persistConfig";
 
-export function waitForRehydration() {
-    return new Promise((resolve) => {
-        const unsubscribe = store.subscribe(() => {
-            const { isHydrated } = store.getState()._persist;
-            if (isHydrated) {
-                resolve();
-            }
-        });
-        unsubscribe();
-    });
+
+export async function getRehydratedState() {
+	const state = await getStoredState(CONFIG);
+	return state
 }
-
 
