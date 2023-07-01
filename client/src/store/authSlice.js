@@ -13,10 +13,12 @@ const authSlice = createSlice({
             state.token = action.payload.token;
             state.email = action.payload.email;
             state.id = action.payload.id;
+            return state;
         }
     }
 })
 
 export const authActions = authSlice.actions;
+export const authReducer = authSlice.reducer;
 export default authSlice;
 
