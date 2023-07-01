@@ -1,7 +1,7 @@
 import { Form, useNavigate, useNavigation, json, redirect , useActionData} from 'react-router-dom';
 import { useEffect } from 'react';
 import useInput from '../hooks/useInput';
-import store from '../store'
+import { store }  from '../store'
 import getBackendHostname from '../util/host';
  
 import classes from './NoteForm.module.css'
