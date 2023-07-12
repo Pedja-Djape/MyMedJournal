@@ -15,7 +15,7 @@ const Card = (props) => {
     }
 
     const favHandler = () => {
-        fetch(getBackendHostname(), {
+        fetch(getBackendHostname() + '/papers', {
             method: buttonInfo.method,
             headers: {
                 "Authorization": "Bearer " + authState.token,
