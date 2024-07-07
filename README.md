@@ -1,5 +1,6 @@
 # MyMedJournal
 
+
 Go check it out [here](https://medappfrontend.web.app/)!
 
 ## Description
